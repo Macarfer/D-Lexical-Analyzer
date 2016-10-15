@@ -1,8 +1,8 @@
-
+#define N 10
 /*Text array of the document to read*/
-char * fileToOpen = "../regression.d";
+//const char * fileToOpen = "../regression.d";
 /*Initializes all necessary structures for reading from the file*/
-short initialize();
+char * initialize();
 /*Indicate the relative path to the file that is gonna be openned*/
 short open(char * fileRoute);
 /*Sends actual character to the lexical analyzer*/
