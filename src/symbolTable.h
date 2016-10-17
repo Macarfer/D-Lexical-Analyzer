@@ -25,4 +25,4 @@ symbolTable * insertOnSymbolTable(symbolTable * table,const char * indentifier, 
 short deleteTable(symbolTable *);
 //void modify();
 
-//void search():
+short searchSymbol(symbolTable * ,const char * indentifier);

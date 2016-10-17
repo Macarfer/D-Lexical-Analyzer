@@ -12,7 +12,7 @@
 #define MIN_INT -2147483648
 #define MAX_INT 2147483647
 
-short insertSymbolOnNode(levelNode *,const char * identifier,short line);
+short insertSymbol(symbol **,const char * identifier,short line);
 
 levelNode * workingNode, * auxiliarNode;
 symbol * workingSymbol, * auxiliarSymbol;
@@ -28,6 +28,7 @@ symbolTable * initializeTable(symbolTable * table){
 		return table;
 	}
 }
+
 symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, short line, short level){
 
 	/*
@@ -39,7 +40,8 @@ symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, s
 		table->first->level = 1;
 		table->first->nextNode = NULL;
 		//table->first->firstSymbolOfLevel=(symbol *)malloc(sizeof(symbol));
-		insertSymbolOnNode(table->first,identifier,line);
+		insertSymbol(&table->first->firstSymbolOfLevel,identifier,line);
+		//printf("First symbol of level directon out: %p\n",table->first->firstSymbolOfLevel);
 		return table;
 		//return 0;
 
@@ -50,8 +52,8 @@ symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, s
 	*/
 	}else{
 	workingNode = table->first;
-	printf("Auxiliar node: %p\n",workingNode);
-	printf("Table first: %p\n",table->first);
+	// printf("Auxiliar node: %p\n",workingNode);
+	// printf("Table first: %p\n",table->first);
 	while(workingNode!=NULL){
 		// printf("Axuiliar node level: %d\n",workingNode->level);
 		// printf("Compared node level: %d\n",level);
@@ -60,11 +62,11 @@ symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, s
 		* 	symbol in the already existing level node
 		*/
 		if(workingNode->level==level){
-			printf("I'm gonna insert an item\n");
-			insertSymbolOnNode(workingNode,identifier,line);
-
+			//printf("I'm gonna insert an item\n");
+			insertSymbol(&workingNode->firstSymbolOfLevel,identifier,line);
+			//&workingNode=(*workingNode)->nextNode;
 			workingNode=workingNode->nextNode;
-			//return 0;
+			return table;
 		/*
 		*	If the node doesn't exist, we must create a new one
 		*	this new node is linked from the last created one
@@ -81,35 +83,98 @@ symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, s
 }
 
 
-short insertSymbolOnNode(levelNode * node,const char * identifier,short line){
-
-	if(node->firstSymbolOfLevel==NULL){
-		printf("Entered!\n");
-		node->firstSymbolOfLevel= (symbol *) malloc(sizeof(symbol));
-		node->firstSymbolOfLevel->identifier = (char *) malloc(sizeof(identifier));
-		strcpy(node->firstSymbolOfLevel->identifier,identifier);
-		node->firstSymbolOfLevel->line = line;
-		node->firstSymbolOfLevel->left = NULL;
-		node->firstSymbolOfLevel->right = NULL;
-		printf("First symbol of level directon: %p\n",&node->firstSymbolOfLevel);
-		printf("Good job first attemp!\n");
-		return 0;
-	}else{
-		printf("Pls I'm half working!\n");
-		workingSymbol=node->firstSymbolOfLevel;
-		do{
-			switch(strcmp(workingSymbol->identifier,identifier)){
+short searchSymbol(symbolTable * table,const char * identifier){
+	int index=1;
+	auxiliarNode=table->first;
+	do{
+		index=1;
+		auxiliarSymbol=auxiliarNode->firstSymbolOfLevel;
+		while(index){
+			printf("auxiliar: %s\n",auxiliarSymbol->identifier);
+			switch(strcmp(auxiliarSymbol->identifier,identifier)){
 				case MIN_INT ... -1:
-				printf("I'm gonna go right\n");
+				if(auxiliarSymbol->right!=NULL){
+					auxiliarSymbol=auxiliarSymbol->right;
+				}else{
+					index=0;
+				}
 				break;
 				case 1 ... MAX_INT :
-				printf("I'm gonna go left\n");
+				if(auxiliarSymbol->left!=NULL){
+					auxiliarSymbol=auxiliarSymbol->left;
+				}else{
+					index=0;
+				}
 				break;
 				default:
-				printf("Same identifier beach!\n");
+					printf("Found %s!\n",auxiliarSymbol->identifier);
+					return 1;
 				break;
 			}
-		}while(workingSymbol->left!=NULL && workingSymbol->right!=NULL);
+		}
+		if(auxiliarNode->nextNode==NULL)
+			return 0;
+		else
+			auxiliarNode=auxiliarNode->nextNode;
+	}while(auxiliarNode->nextNode!=NULL);
+
+}
+
+short insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short line){
+	if(*firstSymbolOfLevel==NULL){
+		//printf("Entered!\n");
+		*firstSymbolOfLevel= (symbol *) malloc(sizeof(symbol));
+		(*firstSymbolOfLevel)->identifier = (char *) malloc(sizeof(identifier));
+		strcpy((*firstSymbolOfLevel)->identifier,identifier);
+		(*firstSymbolOfLevel)->line = line;
+		(*firstSymbolOfLevel)->left = NULL;
+		(*firstSymbolOfLevel)->right = NULL;
+		// printf("First symbol of level directon: %p\n",*firstSymbolOfLevel);
+	// 	// printf("Good job first attemp!\n");
+		return 0;
+	}else{
+		workingSymbol=*firstSymbolOfLevel;
+		// printf("working symbol: %p\n",workingSymbol);
+		// printf("First symbol: %p\n",firstSymbolOfLevel);
+	//	do{
+		while(1){
+			switch(strcmp(workingSymbol->identifier,identifier)){
+				case MIN_INT ... -1:
+				if(workingSymbol->right==NULL){
+				//printf("I'm gonna go right\n");
+				printf("I've inserted %s right to %s\n",identifier,workingSymbol->identifier);
+					workingSymbol->right=(symbol *) malloc(sizeof(symbol));
+					workingSymbol->right->line = line;
+					workingSymbol->right->identifier = (char *) malloc(sizeof(identifier));
+					strcpy(workingSymbol->right->identifier,identifier);
+					workingSymbol->right->left=NULL;
+					workingSymbol->right->right=NULL;
+				}else{
+					workingSymbol=workingSymbol->right;
+				}
+				break;
+				case 1 ... MAX_INT :
+				if(workingSymbol->left==NULL){
+				printf("I've inserted %s left to %s\n",identifier,workingSymbol->identifier);
+					workingSymbol->left=(symbol *) malloc(sizeof(symbol));
+					workingSymbol->left->line = line;
+					workingSymbol->left->identifier = (char *) malloc(sizeof(identifier));
+					strcpy(workingSymbol->left->identifier,identifier);
+					workingSymbol->left->left=NULL;
+					workingSymbol->left->right=NULL;
+					return 0;
+					}else{
+						workingSymbol=workingSymbol->left;
+				}
+				break;
+				default:
+					//getchar();
+					//printf("Same identifier beach!\n");
+					return 0;
+				break;
+			}
+		}
+		//}while(workingSymbol->right==NULL && workingSymbol->left==NULL);
 
 	}
 	return 0;

@@ -15,11 +15,21 @@ int main(int argc, char const *argv[])
 
 
 	sTable=initializeTable(sTable);
-	printf("Table direction from main: %p\n",sTable);
+	// printf("Table direction from main: %p\n",sTable);
 	sTable=insertOnSymbolTable(sTable,"include",0,1);
-	printf("Level: %d\n",(sTable->first->level));
+	// printf("Level: %d\n",(sTable->first->level));
 	sTable=insertOnSymbolTable(sTable,"anclude",0,1);
-	printf("Levels: %p\n",(sTable->first->firstSymbolOfLevel));
+
+	sTable=insertOnSymbolTable(sTable,"onclude",0,1);
+	sTable=insertOnSymbolTable(sTable,"oznclude",0,1);
+
+	sTable=insertOnSymbolTable(sTable,"aanclude",0,1);
+	sTable=insertOnSymbolTable(sTable,"abnclude",0,1);
+	sTable=insertOnSymbolTable(sTable,"aaanclude",0,1);
+
+	sTable=insertOnSymbolTable(sTable,"aabnclude",0,1);
+
+	printf("Busca de aabnclude: %hd\n",searchSymbol(sTable, "aabnclude"));
 	/*for(;;){
 		switch(*(buffer+actualCharacter)){
 			case 0 ... 47:
