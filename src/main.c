@@ -4,11 +4,12 @@
 #include "symbolTable.h"
 
 #define PATH_TO_FILE "../regression.d"
+char workingCharacter;
 /*This is the main program of the Lexical Analyzer
 basically it initializates all the components of 
 the analyzer*/
 
-short processCharacter(char *buffer,int *actualCharacter,symbolTable ** table,char **auxiliarBuffer);
+short processCharacter(inputSystem **input,int *actualCharacter,symbolTable ** table,char **auxiliarBuffer);
 short isIdentifier(char *buffer,int *actualCharacter,symbolTable ** table,char **auxiliarBuffer);
 
 int main(int argc, char const *argv[])
@@ -21,25 +22,27 @@ int main(int argc, char const *argv[])
 	inputInitialize(&input,PATH_TO_FILE);
 	printf("Next character: %c",getNextCharacter(&input));
 	//buffer=initialize();
-	// char *auxiliarBuffer= (char *) malloc(200);
+	char *auxiliarBuffer= (char *) malloc(200);
 
 
 	// sTable=initializeTable(sTable);
 	
-	// processCharacter(buffer,&actualCharacter,&sTable,&auxiliarBuffer);
+	processCharacter(&input,&actualCharacter,&sTable,&auxiliarBuffer);
 	/*Here we declare the variables that are going to be shared between processes*/
 //	printf("Caracter: %s\n",buffer);
 //	printf("asdf: %c\n",*(buffer+0));
 	return 0;
 }
 
-short processCharacter(char *buffer,int *actualCharacter,symbolTable ** table,char **auxiliarBuffer){
-		switch(*(buffer+*actualCharacter)){
+short processCharacter(inputSystem **input,int *actualCharacter,symbolTable ** table,char **auxiliarBuffer){
+	workingCharacter=getNextCharacter(input);
+		switch(workingCharacter){
 			case 65 ... 90: // [A-Z]
 			case 97 ... 122: // [a-z]
 			case 95: // _
-				*((*auxiliarBuffer)+*actualCharacter)=*(buffer+*actualCharacter);
-				isIdentifier(buffer,actualCharacter,table,auxiliarBuffer);
+				printf("character: %c\n",workingCharacter);
+				// *((*auxiliarBuffer)+*actualCharacter)=*(buffer+*actualCharacter);
+				// isIdentifier(buffer,actualCharacter,table,auxiliarBuffer);
 				break;
 	}
 }
