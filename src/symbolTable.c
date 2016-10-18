@@ -12,7 +12,7 @@
 #define MIN_INT -2147483648
 #define MAX_INT 2147483647
 
-short insertSymbol(symbol **,const char * identifier,short line);
+symbol * insertSymbol(symbol **,const char * identifier,short line);
 
 levelNode * workingNode, * auxiliarNode;
 symbol * workingSymbol, * auxiliarSymbol;
@@ -29,20 +29,20 @@ symbolTable * initializeTable(symbolTable * table){
 	}
 }
 
-symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, short line, short level){
+symbol * insertOnSymbolTable(symbolTable ** table,const char * identifier, short line, short level){
 
 	/*
 	*
 	*	If the table is empty, the first node is created
 	*/
-	if(table->first==NULL){
-		table->first=(levelNode *) malloc(sizeof(levelNode));
-		table->first->level = 1;
-		table->first->nextNode = NULL;
+	if((*table)->first==NULL){
+		(*table)->first=(levelNode *) malloc(sizeof(levelNode));
+		(*table)->first->level = 1;
+		(*table)->first->nextNode = NULL;
 		//table->first->firstSymbolOfLevel=(symbol *)malloc(sizeof(symbol));
-		insertSymbol(&table->first->firstSymbolOfLevel,identifier,line);
+		return insertSymbol(&(*table)->first->firstSymbolOfLevel,identifier,line);
 		//printf("First symbol of level directon out: %p\n",table->first->firstSymbolOfLevel);
-		return table;
+		
 		//return 0;
 
 	/*
@@ -51,7 +51,7 @@ symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, s
 	* 	linked list of table nodes
 	*/
 	}else{
-	workingNode = table->first;
+	workingNode = (*table)->first;
 	// printf("Auxiliar node: %p\n",workingNode);
 	// printf("Table first: %p\n",table->first);
 	while(workingNode!=NULL){
@@ -63,10 +63,10 @@ symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, s
 		*/
 		if(workingNode->level==level){
 			//printf("I'm gonna insert an item\n");
-			insertSymbol(&workingNode->firstSymbolOfLevel,identifier,line);
+			
 			//&workingNode=(*workingNode)->nextNode;
-			workingNode=workingNode->nextNode;
-			return table;
+			//workingNode=workingNode->nextNode;
+			return insertSymbol(&workingNode->firstSymbolOfLevel,identifier,line);
 		/*
 		*	If the node doesn't exist, we must create a new one
 		*	this new node is linked from the last created one
@@ -79,11 +79,11 @@ symbolTable * insertOnSymbolTable(symbolTable * table,const char * identifier, s
 	// printf("I've inserted shit: %s\n",workingNode->firstSymbolOfLevel->identifier);
 	// return 0;
 }
-	return table;
+	//return table;
 }
 
 
-short searchSymbol(symbolTable * table,const char * identifier){
+symbol * searchSymbol(symbolTable * table,const char * identifier){
 	int index=1;
 	auxiliarNode=table->first;
 	do{
@@ -108,19 +108,19 @@ short searchSymbol(symbolTable * table,const char * identifier){
 				break;
 				default:
 					printf("Found %s!\n",auxiliarSymbol->identifier);
-					return 1;
+					return auxiliarSymbol;
 				break;
 			}
 		}
 		if(auxiliarNode->nextNode==NULL)
-			return 0;
+			return NULL;
 		else
 			auxiliarNode=auxiliarNode->nextNode;
 	}while(auxiliarNode->nextNode!=NULL);
 
 }
 
-short insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short line){
+symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short line){
 	if(*firstSymbolOfLevel==NULL){
 		//printf("Entered!\n");
 		*firstSymbolOfLevel= (symbol *) malloc(sizeof(symbol));
@@ -131,7 +131,7 @@ short insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short li
 		(*firstSymbolOfLevel)->right = NULL;
 		// printf("First symbol of level directon: %p\n",*firstSymbolOfLevel);
 	// 	// printf("Good job first attemp!\n");
-		return 0;
+		return *firstSymbolOfLevel;
 	}else{
 		workingSymbol=*firstSymbolOfLevel;
 		// printf("working symbol: %p\n",workingSymbol);
@@ -149,6 +149,7 @@ short insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short li
 					strcpy(workingSymbol->right->identifier,identifier);
 					workingSymbol->right->left=NULL;
 					workingSymbol->right->right=NULL;
+					return workingSymbol;
 				}else{
 					workingSymbol=workingSymbol->right;
 				}
@@ -162,7 +163,7 @@ short insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short li
 					strcpy(workingSymbol->left->identifier,identifier);
 					workingSymbol->left->left=NULL;
 					workingSymbol->left->right=NULL;
-					return 0;
+					return workingSymbol;
 					}else{
 						workingSymbol=workingSymbol->left;
 				}
@@ -170,7 +171,7 @@ short insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short li
 				default:
 					//getchar();
 					//printf("Same identifier beach!\n");
-					return 0;
+					return workingSymbol;
 				break;
 			}
 		}

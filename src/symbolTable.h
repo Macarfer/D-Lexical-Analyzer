@@ -20,9 +20,9 @@ typedef struct symbolTable{
 }symbolTable;
 
 symbolTable * initializeTable(symbolTable *);
-symbolTable * insertOnSymbolTable(symbolTable * table,const char * indentifier, short line, short level);
+symbol * insertOnSymbolTable(symbolTable ** table,const char * indentifier, short line, short level);
 
 short deleteTable(symbolTable *);
 //void modify();
 
-short searchSymbol(symbolTable * ,const char * indentifier);
+symbol * searchSymbol(symbolTable * ,const char * indentifier);

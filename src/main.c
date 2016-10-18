@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "entrySystem.h"
+#include "inputSystem.h"
+#include <stdlib.h>
 #include "symbolTable.h"
 /*This is the main program of the Lexical Analyzer
 basically it initializates all the components of 
@@ -12,32 +13,23 @@ int main(int argc, char const *argv[])
 	short actualLine=0;
 	int actualCharacter=0;
 	buffer=initialize();
+	char *auxiliarBuffer= (char *) malloc(200);
 
 
 	sTable=initializeTable(sTable);
-	// printf("Table direction from main: %p\n",sTable);
-	sTable=insertOnSymbolTable(sTable,"include",0,1);
-	// printf("Level: %d\n",(sTable->first->level));
-	sTable=insertOnSymbolTable(sTable,"anclude",0,1);
-
-	sTable=insertOnSymbolTable(sTable,"onclude",0,1);
-	sTable=insertOnSymbolTable(sTable,"oznclude",0,1);
-
-	sTable=insertOnSymbolTable(sTable,"aanclude",0,1);
-	sTable=insertOnSymbolTable(sTable,"abnclude",0,1);
-	sTable=insertOnSymbolTable(sTable,"aaanclude",0,1);
-
-	sTable=insertOnSymbolTable(sTable,"aabnclude",0,1);
-
-	printf("Busca de aabnclude: %hd\n",searchSymbol(sTable, "aabnclude"));
-	/*for(;;){
+	for(;;){
 		switch(*(buffer+actualCharacter)){
-			case 0 ... 47:
+			case 32:
+			printf("I've inserted: %s\n",insertOnSymbolTable(&sTable,auxiliarBuffer,0,1)->identifier);
 				break;
 			default:
-				//printf("Character: %c",*(buffer+actualCharacter));
-				actualCharacter++;
+				printf("Character: %c\n",*(buffer+actualCharacter));
+				*(auxiliarBuffer+actualCharacter)=*(buffer+actualCharacter);
 				//insert(buffer,1);
+				//getchar();
+				printf("Bufer: %s\n",auxiliarBuffer);
+
+				actualCharacter++;
 				getchar();
 				break;
 		}
