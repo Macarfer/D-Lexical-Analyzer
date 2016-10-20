@@ -30,5 +30,9 @@ char getNextCharacter(inputSystem ** system){
 	(*system)->frontPointer+=1;
 	return *((*system)->doubleGuardBuffer+(*system)->frontPointer-1);
 };
+
+void returnCharacter(inputSystem ** system){
+	(*system)->frontPointer-=1;
+};
 /*Finalizes all structures used on this program and frees memory and structures*/
 short finalize();

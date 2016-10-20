@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 10
+#define N 1000
 
 typedef struct inputSystem{
 	FILE * fileToOpen;
@@ -20,5 +20,7 @@ void inputInitialize(inputSystem **,const char *);
 short open(char * fileRoute);
 /*Sends actual character to the lexical analyzer*/
 char getNextCharacter(inputSystem ** system);
+
+void returnCharacter(inputSystem ** system);
 /*Finalizes all structures used on this program and frees memory and structures*/
 short finalize();
