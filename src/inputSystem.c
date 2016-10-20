@@ -27,7 +27,8 @@ void inputInitialize(inputSystem ** system,const char * pathToFile){
 
 /*Sends actual character to the lexical analyzer*/
 char getNextCharacter(inputSystem ** system){
-	return *((*system)->doubleGuardBuffer+(*system)->frontPointer);
+	(*system)->frontPointer+=1;
+	return *((*system)->doubleGuardBuffer+(*system)->frontPointer-1);
 };
 /*Finalizes all structures used on this program and frees memory and structures*/
 short finalize();
