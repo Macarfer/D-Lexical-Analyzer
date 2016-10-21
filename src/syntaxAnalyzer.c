@@ -5,11 +5,18 @@
 int main(int argc, char const *argv[])
 {
 	lexicalAnalyzer * lexical=NULL;
-	initializeLexicalAnalyzer(&lexical);
-	for(;;){
-		getToken(&lexical);
-		getchar();
-}
+	symbolTable  * lexicalt=NULL;
+
+	lexicalt = initializeTable(lexicalt);
+	insertOnSymbolTable(&lexicalt,"abstract",0,0);
+	searchSymbol(lexicalt,"abstract");
+// 	initializeLexicalAnalyzer(&lexical);
+// 	for(;;){
+// 		//printf("%s\n",getToken(&lexical)->identifier);
+// 		getToken(&lexical);
+// 		getchar();
+// 		printTable(lexical->sTable);
+// }
 	/* code */
 	return 0;
 }

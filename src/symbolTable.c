@@ -13,6 +13,8 @@
 #define MAX_INT 2147483647
 
 symbol * insertSymbol(symbol **,const char * identifier,short line);
+void inorder(symbol *firstSymbolOfLevel);
+
 
 levelNode * workingNode, * auxiliarNode;
 symbol * workingSymbol, * auxiliarSymbol;
@@ -142,28 +144,28 @@ symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short
 				case MIN_INT ... -1:
 				if(workingSymbol->right==NULL){
 				//printf("I'm gonna go right\n");
-				//printf("I've inserted %s right to %s\n",identifier,workingSymbol->identifier);
 					workingSymbol->right=(symbol *) malloc(sizeof(symbol));
 					workingSymbol->right->line = line;
 					workingSymbol->right->identifier = (char *) malloc(sizeof(identifier));
 					strcpy(workingSymbol->right->identifier,identifier);
 					workingSymbol->right->left=NULL;
 					workingSymbol->right->right=NULL;
-					return workingSymbol;
+				printf("I've inserted %s right to %s\n",workingSymbol->right->identifier,workingSymbol->identifier);
+					return workingSymbol->right;
 				}else{
 					workingSymbol=workingSymbol->right;
 				}
 				break;
 				case 1 ... MAX_INT :
 				if(workingSymbol->left==NULL){
-				//printf("I've inserted %s left to %s\n",identifier,workingSymbol->identifier);
 					workingSymbol->left=(symbol *) malloc(sizeof(symbol));
 					workingSymbol->left->line = line;
 					workingSymbol->left->identifier = (char *) malloc(sizeof(identifier));
 					strcpy(workingSymbol->left->identifier,identifier);
 					workingSymbol->left->left=NULL;
 					workingSymbol->left->right=NULL;
-					return workingSymbol;
+					printf("I've inserted %s left to %s\n",workingSymbol->left->identifier,workingSymbol->identifier);
+					return workingSymbol->left;
 					}else{
 						workingSymbol=workingSymbol->left;
 				}
@@ -179,4 +181,22 @@ symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short
 
 	}
 	return 0;
+}
+
+void printTable(symbolTable *table){
+	workingNode = table->first;
+	while(workingNode!=NULL){
+		inorder(workingNode->firstSymbolOfLevel);
+		workingNode=workingNode->nextNode;
+	}
+
+}
+
+void inorder(symbol *firstSymbolOfLevel){
+
+	if(firstSymbolOfLevel== NULL)
+		return;
+	inorder(firstSymbolOfLevel->left);
+	printf("%s\n",firstSymbolOfLevel->identifier);
+	inorder(firstSymbolOfLevel->right);
 }

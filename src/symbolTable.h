@@ -26,3 +26,5 @@ short deleteTable(symbolTable *);
 //void modify();
 
 symbol * searchSymbol(symbolTable * ,const char * indentifier);
+
+void printTable(symbolTable *table);

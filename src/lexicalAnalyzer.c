@@ -66,7 +66,7 @@ symbol * processCharacter(inputSystem **input,int *actualCharacter,symbolTable *
 			case 125: // }
 
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
-				 printf("I've inserted: %s\n",*auxiliarBuffer);
+				 //printf("I've inserted: %s\n",*auxiliarBuffer);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);
 				
 			break;
@@ -77,7 +77,7 @@ symbol * processCharacter(inputSystem **input,int *actualCharacter,symbolTable *
 					return insertOnSymbolTable(table,"==",0,1);
 				}else{
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
-					printf("I've inserted: %s\n",*auxiliarBuffer);
+					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter(input);
 					return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 				}
@@ -137,7 +137,7 @@ symbol * isNonLiteralString(inputSystem **input,int *actualCharacter,symbolTable
 			break;
 			default:
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
-				printf("I've inserted: %s\n",*auxiliarBuffer);
+				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 			break;
@@ -163,7 +163,7 @@ symbol * isSeparator(inputSystem **input,int *actualCharacter,symbolTable ** tab
 			case 10: // new line
 			case 59: // ;
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
-				printf("I've inserted: %s\n",*auxiliarBuffer);
+				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 			break;
@@ -186,7 +186,7 @@ symbol * isSucessionOfPoints(inputSystem **input,int *actualCharacter,symbolTabl
 			default:
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
 				if((*actualCharacter)<3){
-				printf("I've inserted: %s\n",*auxiliarBuffer);
+				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);
 				}else{
@@ -245,7 +245,7 @@ symbol * isComment(inputSystem **input,int *actualCharacter,symbolTable ** table
 			default:
 
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
-				printf("I've inserted: %s\n",*auxiliarBuffer);
+				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);
 			break;
@@ -272,7 +272,7 @@ symbol * isBinaryNumber(inputSystem **input,int *actualCharacter,symbolTable ** 
 					break;
 					default:
 						(*auxiliarBuffer)[*actualCharacter+1]='\0';
-						printf("I've inserted: %s\n",*auxiliarBuffer);
+						//printf("I've inserted: %s\n",*auxiliarBuffer);
 						returnCharacter(input);
 						return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 					break;
@@ -308,7 +308,7 @@ symbol * isIntegerNumber(inputSystem **input,int *actualCharacter,symbolTable **
 			break;
 			default:
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
-				printf("I've inserted: %s\n",*auxiliarBuffer);
+				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 			break;
@@ -346,7 +346,7 @@ symbol * isFloatNumber(inputSystem **input,int *actualCharacter,symbolTable ** t
 						break;
 						default:
 							(*auxiliarBuffer)[*actualCharacter+1]='\0';
-							printf("I've inserted: %s\n",*auxiliarBuffer);
+							//printf("I've inserted: %s\n",*auxiliarBuffer);
 							returnCharacter(input);
 							return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 						break;
@@ -355,7 +355,7 @@ symbol * isFloatNumber(inputSystem **input,int *actualCharacter,symbolTable ** t
 			break;
 			default:
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
-				printf("I've inserted: %s\n",*auxiliarBuffer);
+				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 			break;
@@ -372,7 +372,7 @@ symbol * isStringLiteral(inputSystem **input,int *actualCharacter,symbolTable **
 					(*actualCharacter)+=1;
 					(*auxiliarBuffer)[*actualCharacter]=*workingCharacter;
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
-					printf("I've inserted: %s\n",*auxiliarBuffer);
+					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					//returnCharacter(input);
 					return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 				}
@@ -391,7 +391,7 @@ symbol *processLessThan(inputSystem **input,int *actualCharacter,symbolTable ** 
 			// break;
 			default:
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
-					printf("I've inserted: %s\n",*auxiliarBuffer);
+					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					//returnCharacter(input);
 					return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 			break;
@@ -408,13 +408,13 @@ symbol *processPlus(inputSystem **input,int *actualCharacter,symbolTable ** tabl
 			 (*actualCharacter)+=1;
 			 (*auxiliarBuffer)[*actualCharacter]=*workingCharacter;
 			 (*auxiliarBuffer)[*actualCharacter+1]='\0';
-			printf("I've inserted: %s\n",*auxiliarBuffer);
+			//printf("I've inserted: %s\n",*auxiliarBuffer);
 			//returnCharacter(input);
 			return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);
 			 break;
 			default:
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
-					printf("I've inserted: %s\n",*auxiliarBuffer);
+					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter(input);
 					return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 			break;
@@ -432,7 +432,7 @@ symbol *processAsterisk(inputSystem **input,int *actualCharacter,symbolTable ** 
 			// break;
 			default:
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
-					printf("I've inserted: %s\n",*auxiliarBuffer);
+					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter(input);
 					return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 			break;
@@ -451,7 +451,7 @@ symbol *processDash(inputSystem **input,int *actualCharacter,symbolTable ** tabl
 			// break;
 			default:
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
-					printf("I've inserted: %s\n",*auxiliarBuffer);
+					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter(input);
 					return insertOnSymbolTable(table,(*auxiliarBuffer),0,1);	
 			break;
