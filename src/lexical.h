@@ -1,259 +1,115 @@
-/*
-*
-* This file is gonna store the neccesary resources
-* for performing a lexical analysis.
-* I'ts structure is gonna be somewhat similar to the on lex uses.
-*/
+#define   IDENTIFIER 300
+#define   STRING_LITERAL 301
+#define   CHARACTER_LITERAL 302
+#define   INTEGER_LITERAL 303
+#define   FLOAT_LITERAL 304
+#define   RESERVED 305
 
-EndOfFile:
-    \u0000
-    \u001A
-
-EndOfLine:
-    \u000D
-    \u000A
-    \u000D \u000A
-    \u2028
-    \u2029
-    EndOfFile
-
-WhiteSpace:
-    Space
-    Space WhiteSpace
-
-Space:
-    \u0020
-    \u0009
-    \u000B
-    \u000C
-
-Comment:
-    BlockComment
-    LineComment
-    NestingBlockComment
-
-BlockComment:
-    /* Characters */
-
-LineComment:
-    // Characters EndOfLine
-
-NestingBlockComment:
-    /+ NestingBlockCommentCharacters +/
-
-NestingBlockCommentCharacters:
-    NestingBlockCommentCharacter
-    NestingBlockCommentCharacter NestingBlockCommentCharacters
-
-NestingBlockCommentCharacter:
-    Character
-    NestingBlockComment
-
-Characters:
-    Character
-    Character Characters
-
-Token:
-    Identifier
-    StringLiteral
-    CharacterLiteral
-    IntegerLiteral
-    FloatLiteral
-    Keyword
-    /
-    /=
-    .
-    ..
-    ...
-    &
-    &=
-    &&
-    |
-    |=
-    ||
-    -
-    -=
-    --
-    +
-    +=
-    ++
-    <
-    <=
-    <<
-    <<=
-    <>
-    <>=
-    >
-    >=
-    >>=
-    >>>=
-    >>
-    >>>
-    !
-    !=
-    !<>
-    !<>=
-    !<
-    !<=
-    !>
-    !>=
-    (
-    )
-    [
-    ]
-    {
-    }
-    ?
-    ,
-    ;
-    :
-    $
-    =
-    ==
-    *
-    *=
-    %
-    %=
-    ^
-    ^=
-    ^^
-    ^^=
-    ~
-    ~=
-    @
-    =>
-    #
-
-Keyword:
-    abstract
-    alias
-    align
-    asm
-    assert
-    auto
-
-    body
-    bool
-    break
-    byte
-
-    case
-    cast
-    catch
-    cdouble
-    cent
-    cfloat
-    char
-    class
-    const
-    continue
-    creal
-
-    dchar
-    debug
-    default
-    delegate
-    delete (deprecated)
-    deprecated
-    do
-    double
-
-    else
-    enum
-    export
-    extern
-
-    false
-    final
-    finally
-    float
-    for
-    foreach
-    foreach_reverse
-    function
-
-    goto
-
-    idouble
-    if
-    ifloat
-    immutable
-    import
-    in
-    inout
-    int
-    interface
-    invariant
-    ireal
-    is
-
-    lazy
-    long
-
-    macro (unused)
-    mixin
-    module
-
-    new
-    nothrow
-    null
-
-    out
-    override
-
-    package
-    pragma
-    private
-    protected
-    public
-    pure
-
-    real
-    ref
-    return
-
-    scope
-    shared
-    short
-    static
-    struct
-    super
-    switch
-    synchronized
-
-    template
-    this
-    throw
-    true
-    try
-    typedef (deprecated)
-    typeid
-    typeof
-
-    ubyte
-    ucent
-    uint
-    ulong
-    union
-    unittest
-    ushort
-
-    version
-    void
-    volatile (deprecated)
-
-    wchar
-    while
-    with
-
-    __FILE__
-    __FILE_FULL_PATH__
-    __MODULE__
-    __LINE__
-    __FUNCTION__
-    __PRETTY_FUNCTION__
-
-    __gshared
-    __traits
-    __vector
-    __parameters
+#define   abstract 306
+#define   alias 307
+#define   align 308
+#define   asm 309
+#define   assert 310
+#define   auto 311
+#define   body 312
+#define   bool 313
+#define   break 314
+#define   byte 315
+#define   case 316
+#define   cast 317
+#define   catch 318
+#define   cdouble 319
+#define   cent 320
+#define   cfloat 321
+#define   char 322
+#define   class 323
+#define   const 324
+#define   continue 325
+#define   creal 326
+#define   dchar 327
+#define   debug 328
+#define   default 329
+#define   delegate 330
+#define   deprecated 331
+#define   do 332
+#define   double 333
+#define   else 334
+#define   enum 335
+#define   export 336
+#define   extern 337
+#define   false 338
+#define   final 339
+#define   finally 340
+#define   float 341
+#define   for 342
+#define   foreach 343
+#define   foreach_reverse 344
+#define   function 345
+#define   goto 346
+#define   idouble 347
+#define   if 348
+#define   ifloat 349
+#define   immutable 350
+#define   import 351
+#define   in 352
+#define   inout 353
+#define   int 354
+#define   interface 355
+#define   invariant 356
+#define   ireal 357
+#define   is 358
+#define   lazy 359
+#define   long 360
+#define   mixin 361
+#define   module 362
+#define   new 363
+#define   nothrow 364
+#define   null 365
+#define   out 366
+#define   override 367
+#define   package 368
+#define   pragma 369
+#define   private 370
+#define   protected 371
+#define   public 372
+#define   pure 373
+#define   real 374
+#define   ref 375
+#define   return 376
+#define   scope 377
+#define   shared 378
+#define   short 379
+#define   static 380
+#define   struct 381
+#define   super 382
+#define   switch 383
+#define   synchronized 384
+#define   template 385
+#define   this 386
+#define   throw 387
+#define   true 388
+#define   try 389
+#define   typeid 390
+#define   typeof 391
+#define   ubyte 392
+#define   ucent 393
+#define   uint 394
+#define   ulong 395
+#define   union 396
+#define   unittest 397
+#define   ushort 398
+#define   version 399
+#define   void  400
+#define   wchar 401
+#define   while 402
+#define   with 403
+#define   __FILE__ 404
+#define   __FILE_FULL_PATH__ 405
+#define   __MODULE__ 406
+#define   __LINE__ 407
+#define   __FUNCTION__ 408
+#define   __PRETTY_FUNCTION__ 409
+#define   __gshared 500
+#define   __traits 501
+#define   __vector 502
+#define   __parameters 503

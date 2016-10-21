@@ -142,7 +142,7 @@ symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short
 				case MIN_INT ... -1:
 				if(workingSymbol->right==NULL){
 				//printf("I'm gonna go right\n");
-				printf("I've inserted %s right to %s\n",identifier,workingSymbol->identifier);
+				//printf("I've inserted %s right to %s\n",identifier,workingSymbol->identifier);
 					workingSymbol->right=(symbol *) malloc(sizeof(symbol));
 					workingSymbol->right->line = line;
 					workingSymbol->right->identifier = (char *) malloc(sizeof(identifier));
@@ -156,7 +156,7 @@ symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short
 				break;
 				case 1 ... MAX_INT :
 				if(workingSymbol->left==NULL){
-				printf("I've inserted %s left to %s\n",identifier,workingSymbol->identifier);
+				//printf("I've inserted %s left to %s\n",identifier,workingSymbol->identifier);
 					workingSymbol->left=(symbol *) malloc(sizeof(symbol));
 					workingSymbol->left->line = line;
 					workingSymbol->left->identifier = (char *) malloc(sizeof(identifier));
