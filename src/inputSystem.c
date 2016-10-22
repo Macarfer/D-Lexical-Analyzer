@@ -18,7 +18,8 @@ void inputInitialize(inputSystem ** system,const char * pathToFile){
 	// minimizing the time spent in this task*/
 	(*system)->fileToOpen = fopen(pathToFile,"r");
 	fread((*system)->doubleGuardBuffer,sizeof(char),2*N,(*system)->fileToOpen);
-	printf("contido: %s\n",(*system)->doubleGuardBuffer);
+	//printf("contido: %s\n",(*system)->doubleGuardBuffer);
+	//fclose((*system)->fileToOpen);
 	// printf("contido apuntado por initialPointer: %c\n",*((*system)->doubleGuardBuffer+(*system)->initialPointer));
 	// printf("contido apuntado por frontPointer: %c\n",*((*system)->doubleGuardBuffer+(*system)->frontPointer));
 	// // return buffer;

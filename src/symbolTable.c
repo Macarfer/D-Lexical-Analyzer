@@ -12,7 +12,7 @@
 #define MIN_INT -2147483648
 #define MAX_INT 2147483647
 
-symbol * insertSymbol(symbol **,const char * identifier,short line);
+symbol * insertSymbol(symbol **,const char * lexicalComponent,int identifier,short line);
 void inorder(symbol *firstSymbolOfLevel);
 
 
@@ -31,18 +31,19 @@ symbolTable * initializeTable(symbolTable * table){
 	}
 }
 
-symbol * insertOnSymbolTable(symbolTable ** table,const char * identifier, short line, short level){
+symbol * insertOnSymbolTable(symbolTable ** table,const char * lexicalComponent,int identifier, short line, short level){
 
 	/*
 	*
 	*	If the table is empty, the first node is created
 	*/
 	if((*table)->first==NULL){
-		(*table)->first=(levelNode *) malloc(sizeof(levelNode));
+		(*table)->first=malloc(sizeof(levelNode));
 		(*table)->first->level = 1;
 		(*table)->first->nextNode = NULL;
+		(*table)->first->firstSymbolOfLevel=NULL;
 		//table->first->firstSymbolOfLevel=(symbol *)malloc(sizeof(symbol));
-		return insertSymbol(&(*table)->first->firstSymbolOfLevel,identifier,line);
+		return insertSymbol(&(*table)->first->firstSymbolOfLevel,lexicalComponent, identifier ,line);
 		//printf("First symbol of level directon out: %p\n",table->first->firstSymbolOfLevel);
 		
 		//return 0;
@@ -68,7 +69,7 @@ symbol * insertOnSymbolTable(symbolTable ** table,const char * identifier, short
 			
 			//&workingNode=(*workingNode)->nextNode;
 			//workingNode=workingNode->nextNode;
-			return insertSymbol(&workingNode->firstSymbolOfLevel,identifier,line);
+			return insertSymbol(&workingNode->firstSymbolOfLevel,lexicalComponent, identifier ,line);
 		/*
 		*	If the node doesn't exist, we must create a new one
 		*	this new node is linked from the last created one
@@ -78,22 +79,22 @@ symbol * insertOnSymbolTable(symbolTable ** table,const char * identifier, short
 			workingNode=workingNode->nextNode;
 		}
 	}
-	// printf("I've inserted shit: %s\n",workingNode->firstSymbolOfLevel->identifier);
+	// printf("I've inserted shit: %s\n",workingNode->firstSymbolOfLevel->lexicalComponent);
 	// return 0;
 }
 	//return table;
 }
 
 
-symbol * searchSymbol(symbolTable * table,const char * identifier){
+symbol * searchSymbol(symbolTable * table,char * lexicalComponent){
 	int index=1;
 	auxiliarNode=table->first;
 	do{
 		index=1;
 		auxiliarSymbol=auxiliarNode->firstSymbolOfLevel;
 		while(index){
-			printf("auxiliar: %s\n",auxiliarSymbol->identifier);
-			switch(strcmp(auxiliarSymbol->identifier,identifier)){
+			//printf("auxiliar: %s\n",auxiliarSymbol->lexicalComponent);
+			switch(strcmp(auxiliarSymbol->lexicalComponent,lexicalComponent)){
 				case MIN_INT ... -1:
 				if(auxiliarSymbol->right!=NULL){
 					auxiliarSymbol=auxiliarSymbol->right;
@@ -109,7 +110,7 @@ symbol * searchSymbol(symbolTable * table,const char * identifier){
 				}
 				break;
 				default:
-					printf("Found %s!\n",auxiliarSymbol->identifier);
+					//printf("Found %s!\n",auxiliarSymbol->lexicalComponent);
 					return auxiliarSymbol;
 				break;
 			}
@@ -122,15 +123,16 @@ symbol * searchSymbol(symbolTable * table,const char * identifier){
 
 }
 
-symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short line){
+symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * lexicalComponent, int identifier,short line){
 	if(*firstSymbolOfLevel==NULL){
 		//printf("Entered!\n");
-		*firstSymbolOfLevel= (symbol *) malloc(sizeof(symbol));
-		(*firstSymbolOfLevel)->identifier = (char *) malloc(sizeof(identifier));
-		strcpy((*firstSymbolOfLevel)->identifier,identifier);
+		*firstSymbolOfLevel= malloc(sizeof(symbol));
+		(*firstSymbolOfLevel)->lexicalComponent = malloc(strlen(lexicalComponent));
+		strcpy((*firstSymbolOfLevel)->lexicalComponent,lexicalComponent);
 		(*firstSymbolOfLevel)->line = line;
 		(*firstSymbolOfLevel)->left = NULL;
 		(*firstSymbolOfLevel)->right = NULL;
+		(*firstSymbolOfLevel)->identifier=identifier;
 		// printf("First symbol of level directon: %p\n",*firstSymbolOfLevel);
 	// 	// printf("Good job first attemp!\n");
 		return *firstSymbolOfLevel;
@@ -140,17 +142,18 @@ symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short
 		// printf("First symbol: %p\n",firstSymbolOfLevel);
 	//	do{
 		while(1){
-			switch(strcmp(workingSymbol->identifier,identifier)){
+			switch(strcmp(workingSymbol->lexicalComponent,lexicalComponent)){
 				case MIN_INT ... -1:
 				if(workingSymbol->right==NULL){
 				//printf("I'm gonna go right\n");
-					workingSymbol->right=(symbol *) malloc(sizeof(symbol));
+					workingSymbol->right=malloc(sizeof(symbol));
 					workingSymbol->right->line = line;
-					workingSymbol->right->identifier = (char *) malloc(sizeof(identifier));
-					strcpy(workingSymbol->right->identifier,identifier);
+					workingSymbol->right->lexicalComponent = malloc(strlen(lexicalComponent));
+					strcpy(workingSymbol->right->lexicalComponent,lexicalComponent);
+					workingSymbol->right->identifier=identifier;
 					workingSymbol->right->left=NULL;
 					workingSymbol->right->right=NULL;
-				printf("I've inserted %s right to %s\n",workingSymbol->right->identifier,workingSymbol->identifier);
+				// printf("I've inserted %s right to %s\n",workingSymbol->right->lexicalComponent,workingSymbol->lexicalComponent);
 					return workingSymbol->right;
 				}else{
 					workingSymbol=workingSymbol->right;
@@ -158,13 +161,14 @@ symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short
 				break;
 				case 1 ... MAX_INT :
 				if(workingSymbol->left==NULL){
-					workingSymbol->left=(symbol *) malloc(sizeof(symbol));
+					workingSymbol->left=malloc(sizeof(symbol));
 					workingSymbol->left->line = line;
-					workingSymbol->left->identifier = (char *) malloc(sizeof(identifier));
-					strcpy(workingSymbol->left->identifier,identifier);
+					workingSymbol->left->lexicalComponent = malloc(strlen(lexicalComponent));
+					strcpy(workingSymbol->left->lexicalComponent,lexicalComponent);
 					workingSymbol->left->left=NULL;
 					workingSymbol->left->right=NULL;
-					printf("I've inserted %s left to %s\n",workingSymbol->left->identifier,workingSymbol->identifier);
+					workingSymbol->left->identifier=identifier;
+					// printf("I've inserted %s left to %s\n",workingSymbol->left->lexicalComponent,workingSymbol->lexicalComponent);
 					return workingSymbol->left;
 					}else{
 						workingSymbol=workingSymbol->left;
@@ -172,7 +176,8 @@ symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * identifier,short
 				break;
 				default:
 					//getchar();
-					//printf("Same identifier beach!\n");
+					//printf("Same ->lexicalComponent beach!\n");
+					// printf("I've inserted: %s\n",workingSymbol->lexicalComponent);
 					return workingSymbol;
 				break;
 			}
@@ -197,6 +202,6 @@ void inorder(symbol *firstSymbolOfLevel){
 	if(firstSymbolOfLevel== NULL)
 		return;
 	inorder(firstSymbolOfLevel->left);
-	printf("%s\n",firstSymbolOfLevel->identifier);
+	printf("%s\n",firstSymbolOfLevel->lexicalComponent);
 	inorder(firstSymbolOfLevel->right);
 }

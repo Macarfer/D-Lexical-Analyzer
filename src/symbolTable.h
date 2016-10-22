@@ -2,16 +2,17 @@
 
 
 typedef struct symbol{
-	char * identifier;
+	char * lexicalComponent;
+	int identifier;
 	short line;
 	struct symbol * left;
 	struct symbol * right;
-} sybmol;
+} symbol;
 
 
 typedef struct levelNode{
 	short level;
-	levelNode * nextNode;
+	struct levelNode * nextNode;
 	symbol * firstSymbolOfLevel;
 }levelNode;
 
@@ -20,11 +21,11 @@ typedef struct symbolTable{
 }symbolTable;
 
 symbolTable * initializeTable(symbolTable *);
-symbol * insertOnSymbolTable(symbolTable ** table,const char * indentifier, short line, short level);
+symbol * insertOnSymbolTable(symbolTable ** table,const char * lexicalComponent, int identifier, short line, short level);
 
 short deleteTable(symbolTable *);
 //void modify();
 
-symbol * searchSymbol(symbolTable * ,const char * indentifier);
+symbol * searchSymbol(symbolTable * ,char * indentifier);
 
 void printTable(symbolTable *table);
