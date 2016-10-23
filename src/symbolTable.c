@@ -45,12 +45,12 @@ symbol * insertOnSymbolTable(symbolTable ** table,const char * lexicalComponent,
 		//table->first->firstSymbolOfLevel=(symbol *)malloc(sizeof(symbol));
 		return insertSymbol(&(*table)->first->firstSymbolOfLevel,lexicalComponent, identifier ,line);
 		//printf("First symbol of level directon out: %p\n",table->first->firstSymbolOfLevel);
-		
+
 		//return 0;
 
 	/*
 	*
-	*	If the table isn't empty we must check the 
+	*	If the table isn't empty we must check the
 	* 	linked list of table nodes
 	*/
 	}else{
@@ -61,12 +61,12 @@ symbol * insertOnSymbolTable(symbolTable ** table,const char * lexicalComponent,
 		// printf("Axuiliar node level: %d\n",workingNode->level);
 		// printf("Compared node level: %d\n",level);
 		/*
-		*	If the node we are loking for already exist, we must insert a new 
+		*	If the node we are loking for already exist, we must insert a new
 		* 	symbol in the already existing level node
 		*/
 		if(workingNode->level==level){
 			//printf("I'm gonna insert an item\n");
-			
+
 			//&workingNode=(*workingNode)->nextNode;
 			//workingNode=workingNode->nextNode;
 			return insertSymbol(&workingNode->firstSymbolOfLevel,lexicalComponent, identifier ,line);
@@ -112,7 +112,6 @@ symbol * searchSymbol(symbolTable * table,char * lexicalComponent){
 				default:
 					//printf("Found %s!\n",auxiliarSymbol->lexicalComponent);
 					return auxiliarSymbol;
-				break;
 			}
 		}
 		if(auxiliarNode->nextNode==NULL)
@@ -179,13 +178,11 @@ symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * lexicalComponent
 					//printf("Same ->lexicalComponent beach!\n");
 					// printf("I've inserted: %s\n",workingSymbol->lexicalComponent);
 					return workingSymbol;
-				break;
 			}
 		}
 		//}while(workingSymbol->right==NULL && workingSymbol->left==NULL);
 
 	}
-	return 0;
 }
 
 void printTable(symbolTable *table){
@@ -205,3 +202,4 @@ void inorder(symbol *firstSymbolOfLevel){
 	printf("%s\n",firstSymbolOfLevel->lexicalComponent);
 	inorder(firstSymbolOfLevel->right);
 }
+

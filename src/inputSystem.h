@@ -4,13 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 1000
+#define N 4096
 
 typedef struct inputSystem{
 	FILE * fileToOpen;
-	char * doubleGuardBuffer;
-	short initialPointer;
-	short frontPointer;
+	char * doubleBuffer;
+	char * initialPointer;
+	char * frontPointer;
+	int readNumber;
 }inputSystem;
 /*Text array of the document to read*/
 //const char * fileToOpen = "../regression.d";
@@ -24,3 +25,5 @@ char getNextCharacter(inputSystem ** system);
 void returnCharacter(inputSystem ** system);
 /*Finalizes all structures used on this program and frees memory and structures*/
 short finalize();
+
+char * getLexeme();

@@ -43,7 +43,7 @@ void initializeLexicalAnalyzer(lexicalAnalyzer ** analyzer){
 			insertOnSymbolTable(&(*analyzer)->keyWordsTable,auxiliarBuffer,RESERVED,0,1);
 			actualCharacter=0;
 		}else if(workingCharacter==0){
-		//	printTable((*analyzer)->keyWordsTable);
+			printTable((*analyzer)->keyWordsTable);
 			return;
 		}else{
 		(auxiliarBuffer)[actualCharacter]=workingCharacter;
@@ -75,15 +75,12 @@ symbol * processCharacter(inputSystem **input,int *actualCharacter,symbolTable *
 			case 95: // _
 				 // ((*auxiliarBuffer)+*actualCharacter)=*workingCharacter;
 				return isNonLiteralString(input,actualCharacter,table,keyWords,auxiliarBuffer,workingCharacter);
-			break;
 			case 32: // space
 			case 10: // new line
 				return processCharacter(input,actualCharacter,table,keyWords,auxiliarBuffer,workingCharacter);
 				//return NULL;
-			break;
 			case 46: // point
 				return isSucessionOfPoints(input,actualCharacter,table,keyWords,auxiliarBuffer,workingCharacter);
-			break;
 			case 40: // (
 			case 41: // )
 			case 59: // ;
@@ -96,8 +93,7 @@ symbol * processCharacter(inputSystem **input,int *actualCharacter,symbolTable *
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
 				 //printf("I've inserted: %s\n",*auxiliarBuffer);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
-				
-			break;
+
 
 			case 61: // =
 				if(getNextCharacter(input)==61){
@@ -107,50 +103,40 @@ symbol * processCharacter(inputSystem **input,int *actualCharacter,symbolTable *
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
 					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter(input);
-					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);	
+					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
 				}
-
-			break;
 
 			case 60: // <
 				return processLessThan(input,actualCharacter,table,auxiliarBuffer,workingCharacter);
-			break;
 
 			case 42: // *
 				return processAsterisk(input,actualCharacter,table,auxiliarBuffer,workingCharacter);
-			break;
 
 			case 43: // +
 				return processPlus(input,actualCharacter,table,auxiliarBuffer,workingCharacter);
-			break;
 
 			case 45: // -
 				return processDash(input,actualCharacter,table,auxiliarBuffer,workingCharacter);
-			break;
 
 			case 47:// /
 				return isComment(input,actualCharacter,table,keyWords,auxiliarBuffer,workingCharacter);
 			break;
 			case 48: // 0
 				return isBinaryNumber(input,actualCharacter,table,keyWords,auxiliarBuffer,workingCharacter);
-			break;
 			case 49 ... 57: // [1-9]
 				return isIntegerNumber(input,actualCharacter,table,auxiliarBuffer,workingCharacter);
-			break;
 			case 34: // 34
 				return isStringLiteral(input,actualCharacter,table,auxiliarBuffer,workingCharacter);
-			break;
 
 			case 0:
-				printf("End of file!\n ");
+				return insertOnSymbolTable(table,"$",0,0,1);
 			break;
 			default:
 				return isNonLiteralString(input,actualCharacter,table,keyWords,auxiliarBuffer,workingCharacter);
-			break;
-
 
 	}
 }
+
 symbol * isNonLiteralString(inputSystem **input,int *actualCharacter,symbolTable ** table,symbolTable ** keyWords,char **auxiliarBuffer, char * workingCharacter){
 	for(;;){
 		*workingCharacter=getNextCharacter(input);
@@ -168,10 +154,10 @@ symbol * isNonLiteralString(inputSystem **input,int *actualCharacter,symbolTable
 				returnCharacter(input);
 				//printTable(*table);
 				if(searchSymbol(*keyWords,*auxiliarBuffer)!=NULL){
-					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);	
+					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
 				}
 				else
-					return insertOnSymbolTable(table,(*auxiliarBuffer),IDENTIFIER,0,1);	
+					return insertOnSymbolTable(table,(*auxiliarBuffer),IDENTIFIER,0,1);
 			break;
 		}
 
@@ -197,10 +183,10 @@ symbol * isSeparator(inputSystem **input,int *actualCharacter,symbolTable ** tab
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
 				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
-				return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);	
+				return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
 			break;
 			default:
-				
+
 			break;
 		}
 
@@ -280,7 +266,7 @@ symbol * isComment(inputSystem **input,int *actualCharacter,symbolTable ** table
 				returnCharacter(input);
 				return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
 			break;
-	}	
+	}
 }
 }
 
@@ -305,7 +291,7 @@ symbol * isBinaryNumber(inputSystem **input,int *actualCharacter,symbolTable ** 
 						(*auxiliarBuffer)[*actualCharacter+1]='\0';
 						//printf("I've inserted: %s\n",*auxiliarBuffer);
 						returnCharacter(input);
-						return insertOnSymbolTable(table,(*auxiliarBuffer),INTEGER_LITERAL,0,1);	
+						return insertOnSymbolTable(table,(*auxiliarBuffer),INTEGER_LITERAL,0,1);
 					break;
 				}
 
@@ -341,7 +327,7 @@ symbol * isIntegerNumber(inputSystem **input,int *actualCharacter,symbolTable **
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
 				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
-				return insertOnSymbolTable(table,(*auxiliarBuffer),INTEGER_LITERAL,0,1);	
+				return insertOnSymbolTable(table,(*auxiliarBuffer),INTEGER_LITERAL,0,1);
 			break;
 		}
 
@@ -358,7 +344,7 @@ symbol * isFloatNumber(inputSystem **input,int *actualCharacter,symbolTable ** t
 				(*auxiliarBuffer)[*actualCharacter]=*workingCharacter;
 			break;
 			case 69: //E
-			case 101: //e 
+			case 101: //e
 				(*actualCharacter)+=1;
 				(*auxiliarBuffer)[*actualCharacter]=*workingCharacter;
 				*workingCharacter=getNextCharacter(input);
@@ -379,17 +365,16 @@ symbol * isFloatNumber(inputSystem **input,int *actualCharacter,symbolTable ** t
 							(*auxiliarBuffer)[*actualCharacter+1]='\0';
 							//printf("I've inserted: %s\n",*auxiliarBuffer);
 							returnCharacter(input);
-							return insertOnSymbolTable(table,(*auxiliarBuffer),FLOAT_LITERAL,0,1);	
-						break;
+							return insertOnSymbolTable(table,(*auxiliarBuffer),FLOAT_LITERAL,0,1);
+
 						}
 				}
-			break;
 			default:
 				(*auxiliarBuffer)[*actualCharacter+1]='\0';
 				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter(input);
-				return insertOnSymbolTable(table,(*auxiliarBuffer),FLOAT_LITERAL,0,1);	
-			break;
+				return insertOnSymbolTable(table,(*auxiliarBuffer),FLOAT_LITERAL,0,1);
+
 		}
 
 	}
@@ -405,7 +390,7 @@ symbol * isStringLiteral(inputSystem **input,int *actualCharacter,symbolTable **
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
 					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					//returnCharacter(input);
-					return insertOnSymbolTable(table,(*auxiliarBuffer),STRING_LITERAL,0,1);	
+					return insertOnSymbolTable(table,(*auxiliarBuffer),STRING_LITERAL,0,1);
 				}
 				(*actualCharacter)+=1;
 				(*auxiliarBuffer)[*actualCharacter]=*workingCharacter;
@@ -424,8 +409,8 @@ symbol *processLessThan(inputSystem **input,int *actualCharacter,symbolTable ** 
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
 					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					//returnCharacter(input);
-					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);	
-			break;
+					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
+
 
 		}
 	}
@@ -447,8 +432,8 @@ symbol *processPlus(inputSystem **input,int *actualCharacter,symbolTable ** tabl
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
 					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter(input);
-					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);	
-			break;
+					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
+
 
 		}
 	}
@@ -465,8 +450,8 @@ symbol *processAsterisk(inputSystem **input,int *actualCharacter,symbolTable ** 
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
 					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter(input);
-					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);	
-			break;
+					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
+
 
 		}
 	}
@@ -484,7 +469,7 @@ symbol *processDash(inputSystem **input,int *actualCharacter,symbolTable ** tabl
 					(*auxiliarBuffer)[*actualCharacter+1]='\0';
 					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter(input);
-					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);	
+					return insertOnSymbolTable(table,(*auxiliarBuffer),RESERVED,0,1);
 			break;
 
 		}
