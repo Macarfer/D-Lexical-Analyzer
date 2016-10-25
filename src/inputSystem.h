@@ -7,23 +7,16 @@
 
 #define N 4
 
-typedef struct inputSystem{
-	FILE * fileToOpen;
-	char * doubleBuffer;
-	char * initialPointer;
-	char * frontPointer;
-	int readNumber;
-}inputSystem;
 /*Text array of the document to read*/
 //const char * fileToOpen = "../regression.d";
 /*Initializes all necessary structures for reading from the file*/
-void inputInitialize(inputSystem **,const char *);
+void inputInitialize();
 /*Indicate the relative path to the file that is gonna be openned*/
 short open(char * fileRoute);
 /*Sends actual character to the lexical analyzer*/
-char getNextCharacter(inputSystem ** system);
+char getNextCharacter();
 
-void returnCharacter(inputSystem ** system);
+void returnCharacter();
 /*Finalizes all structures used on this program and frees memory and structures*/
 short finalize();
 

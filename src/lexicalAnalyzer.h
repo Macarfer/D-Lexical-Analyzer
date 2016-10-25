@@ -15,16 +15,5 @@
 #define   FLOAT_LITERAL 304
 //#define   RESERVED 305
 
-typedef struct lexicalAnalyzer{
-	inputSystem * input;
-	symbolTable * sTable;
-	symbolTable * keyWordsTable;
-	int actualLine;
-	int actualCharacter;
-	char *auxiliarBuffer;
-	char workingCharacter;
-
-} lexicalAnalyzer;
-
-void initializeLexicalAnalyzer(lexicalAnalyzer **);
-symbol * getToken(lexicalAnalyzer **);
+void initializeLexicalAnalyzer();
+symbol * getToken();
