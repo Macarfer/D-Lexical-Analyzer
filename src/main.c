@@ -10,17 +10,14 @@ the analyzer*/
 
 int main(int argc, char const *argv[])
 {
-	inputInitialize();
-	printf("%c\n",getNextCharacter());
-	printf("%c\n",getNextCharacter());
-	printf("%c\n",getNextCharacter());
-	printf("%c\n",getNextCharacter());
-	printf("%c\n",getNextCharacter());
-	printf("%c\n",getNextCharacter());
-	printf("%c\n",getNextCharacter());
-	printf("%c\n",getNextCharacter());
+	symbol * tmp=NULL;
+	initializeLexicalAnalyzer();
+	do{
+    tmp=getToken();
+	printf("<%d> %s\n",tmp->identifier,tmp->lexeme);
 
-	printf("%s\n",getLexeme());
+	}while(strcmp(tmp->lexeme,"$")!=0);
+
 	/* code */
 	return 0;
 }

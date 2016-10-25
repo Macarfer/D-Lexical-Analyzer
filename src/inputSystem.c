@@ -28,7 +28,7 @@ void inputInitialize(){
 	// minimizing the time spent in this task*/
 	inputSystem.fileToOpen = fopen("../regression.d","r");
 	fread(inputSystem.doubleBuffer,N,1,inputSystem.fileToOpen);
-	printf("contido: %s\n",inputSystem.doubleBuffer);
+	//printf("contido: %s\n",inputSystem.doubleBuffer);
 	inputSystem.doubleBuffer[N] = '\0';
 	//fread((inputSystem.doubleBuffer+N+1),N,1,inputSystem.fileToOpen);
 //inputSystem.doubleBuffer[2*N+1]= '\0';
@@ -63,14 +63,15 @@ char getNextCharacter(){
         fread((inputSystem.doubleBuffer),N,1,inputSystem.fileToOpen);
 
 
-       printf("contido: %s\n",inputSystem.doubleBuffer);
+       //printf("contido: %s\n",inputSystem.doubleBuffer);
 
        inputSystem.doubleBuffer[N] = '\0';
 
         inputSystem.frontPointer=(inputSystem.doubleBuffer);
+        //printf("a: %c\n",*inputSystem.frontPointer );
 
       }else if(&*(inputSystem.frontPointer)==&inputSystem.doubleBuffer[N]){
-        memset(inputSystem.doubleBuffer,'\0',N);
+        memset((inputSystem.doubleBuffer+N+1),'\0',N);
 
         fseek(inputSystem.fileToOpen,N,N*inputSystem.readNumber);
         inputSystem.readNumber+=1;
@@ -82,12 +83,13 @@ char getNextCharacter(){
         inputSystem.doubleBuffer[2*N+1] = '\0';
        // getchar();
         inputSystem.frontPointer=(inputSystem.frontPointer+1);
-       // printf("lasdkfja;sldfjk: %c\n",*inputSystem.frontPointer );
+        //printf("lasdkfja;sldfjk: %c\n",*inputSystem.frontPointer );
 
       }else{
         return '\0';
       }
 	}
+	//printf("asdf: %c\n",*inputSystem.frontPointer);
 	return *inputSystem.frontPointer;
 }
 
