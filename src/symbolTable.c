@@ -53,7 +53,8 @@ symbol * insertOnSymbolTable(symbolTable ** table,const char * lexicalComponent,
 	*	If the table isn't empty we must check the
 	* 	linked list of table nodes
 	*/
-	}else{
+	}
+
 	workingNode = (*table)->first;
 	// printf("Auxiliar node: %p\n",workingNode);
 	// printf("Table first: %p\n",table->first);
@@ -74,14 +75,13 @@ symbol * insertOnSymbolTable(symbolTable ** table,const char * lexicalComponent,
 		*	If the node doesn't exist, we must create a new one
 		*	this new node is linked from the last created one
 		*/
-		}else{
+		}
+
 			printf("Close...\n");
 			workingNode=workingNode->nextNode;
-		}
 	}
 	// printf("I've inserted shit: %s\n",workingNode->firstSymbolOfLevel->lexicalComponent);
-	// return 0;
-}
+	 return NULL;
 	//return table;
 }
 
@@ -119,7 +119,7 @@ symbol * searchSymbol(symbolTable * table,char * lexicalComponent){
 		else
 			auxiliarNode=auxiliarNode->nextNode;
 	}while(auxiliarNode->nextNode!=NULL);
-
+	return NULL;
 }
 
 symbol * insertSymbol(symbol ** firstSymbolOfLevel,const char * lexicalComponent, int identifier,short line){

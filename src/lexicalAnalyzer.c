@@ -58,7 +58,7 @@ void initializeLexicalAnalyzer(lexicalAnalyzer ** analyzer){
 		}else if(workingCharacter==0){
 		free(auxiliarBuffer);
 		free(temporalBuffer);
-			printTable((*analyzer)->keyWordsTable);
+			//printTable((*analyzer)->keyWordsTable);
 			return;
 		}else{
 		(auxiliarBuffer)[actualCharacter]=workingCharacter;
@@ -242,6 +242,9 @@ symbol * isComment(inputSystem **input,int *actualCharacter,symbolTable ** table
 			(*auxiliarBuffer)[0]='\0';
 			for(;;){
 				*workingCharacter=getNextCharacter(input);
+				if(*workingCharacter==42){
+					
+				}
 				if(*workingCharacter==47 && (*auxiliarBuffer)[0]==42){
 					return processCharacter(input,actualCharacter,table,keyWords,auxiliarBuffer,workingCharacter);
 				}

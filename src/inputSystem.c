@@ -44,10 +44,8 @@ char getNextCharacter(inputSystem ** system){
        // printf("asdf1: %p -> %d\n",&(*system)->doubleBuffer[N],(*system)->doubleBuffer[N]);
         //printf("asdf2: %p -> %d\n",&(*system)->doubleBuffer[2*N+1],(*system)->doubleBuffer[2*N+1]);
 	if(*(*system)->frontPointer=='\0'){
-	int i=0;
       if(&*((*system)->frontPointer)==&(*system)->doubleBuffer[2*N+1]){
-        for(i;i<N;i++)
-            *((*system)->doubleBuffer+i)='\0';
+      	memset((*system)->doubleBuffer,'\0',N);
 
         fseek((*system)->fileToOpen,N,N*(*system)->readNumber);
         (*system)->readNumber+=1;
@@ -63,8 +61,7 @@ char getNextCharacter(inputSystem ** system){
         (*system)->frontPointer=((*system)->doubleBuffer);
 
       }else if(&*((*system)->frontPointer)==&(*system)->doubleBuffer[N]){
-        for(i;i<N;i++)
-            *((*system)->doubleBuffer+i)='\0';
+        memset((*system)->doubleBuffer,'\0',N);
 
         fseek((*system)->fileToOpen,N,N*(*system)->readNumber);
         (*system)->readNumber+=1;
@@ -90,9 +87,9 @@ void returnCharacter(inputSystem ** system){
 }
 /*Finalizes all structures used on this program and frees memory and structures*/
 short finalize(){
-
+	return 0;
 }
 
 char * getLexeme(){
-
+	return "asdf";
 }
