@@ -13,7 +13,7 @@
 #define   CHARACTER_LITERAL 302
 #define   INTEGER_LITERAL 303
 #define   FLOAT_LITERAL 304
-#define   RESERVED 305
+//#define   RESERVED 305
 
 typedef struct lexicalAnalyzer{
 	inputSystem * input;

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 4096
+#define N 4
 
 typedef struct inputSystem{
 	FILE * fileToOpen;

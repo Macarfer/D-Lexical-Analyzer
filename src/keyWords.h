@@ -1,103 +1,176 @@
-/**Set of keywords **/
-abstract
-alias
-align
-asm
-assert
-auto
-body
-bool
-break
-byte
-case
-cast
-catch
-cdouble
-cent
-cfloat
-char
-class
-const
-continue
-creal
-dchar
-debug
-default
-delegate
-delete
-deprecated
-do
-double
-else
-enum
-export
-extern
-false
-final
-finally
-float
-for
-foreach
-foreach_reverse
-function
-goto
-idouble
-if
-ifloat
-immutable
-import
-in
-inout
-int
-interface
-invariant
-ireal
-is
-lazy
-long
-macro
-mixin
-module
-new
-nothrow
-null
-out
-override
-package
-pragma
-private
-protected
-public
-pure
-real
-ref
-return
-scope
-shared
-short
-static
-struct
-super
-switch
-synchronized
-template
-this
-throw
-true
-try
-typedef
-typeid
-typeof
-ubyte
-ucent
-uint
-ulong
-union
-unittest
-ushort
-version
-void
-volatile
-wchar
-while
-with
+abstract	305
+alias	306
+align	307
+asm	308
+assert	309
+auto	310
+body	311
+bool	312
+break	313
+byte	314
+case	315
+cast	316
+catch	317
+cdouble	318
+cent	319
+cfloat	320
+char	321
+class	322
+const	323
+continue	324
+creal	325
+dchar	326
+debug	327
+default	328
+delegate	329
+delete	330
+deprecated	331
+do	332
+double	333
+else	334
+enum	335
+export	336
+extern	337
+false	338
+final	339
+finally	340
+float	341
+for	342
+foreach	343
+foreach_reverse	344
+function	345
+goto	346
+idouble	347
+if	348
+ifloat	349
+immutable	350
+import	351
+in	352
+inout	353
+int	354
+interface	355
+invariant	356
+ireal	357
+is	358
+lazy	359
+long	360
+macro	361
+mixin	362
+module	363
+new	364
+nothrow	365
+null	366
+out	367
+override	368
+package	369
+pragma	370
+private	371
+protected	372
+public	373
+pure	374
+real	375
+ref	376
+return	377
+scope	378
+shared	379
+short	380
+static	381
+struct	382
+super	383
+switch	384
+synchronized	385
+template	386
+this	387
+throw	388
+true	389
+try	390
+typedef	391
+typeid	392
+typeof	393
+ubyte	394
+ucent	395
+uint	396
+ulong	397
+union	398
+unittest	399
+ushort	400
+version	401
+void	402
+volatile	403
+wchar	404
+while	405
+with	406
+__FILE__	407
+__FILE_FULL_PATH__	408
+__MODULE__	409
+__LINE__	410
+__FUNCTION__	411
+__PRETTY_FUNCTIO 	412
+__gshared	413
+__traits	414
+__vector	415
+__parameters	416
+	417
+/	418
+/=	419
+.	420
+..	421
+...	422
+&	423
+&=	424
+&&	425
+|	426
+|=	427
+||	428
+-	429
+-=	430
+--	431
++	432
++=	433
+++	434
+<	435
+<=	436
+<<	437
+<<=	438
+<>	439
+<>=	440
+>	441
+>=	442
+>>=	443
+>>>=	444
+>>	445
+>>>	446
+!	447
+!=	448
+!<>	449
+!<>=	450
+!<	451
+!<=	452
+!>	453
+!>=	454
+(	455
+)	456
+[	457
+]	458
+{	459
+}	460
+?	461
+,	462
+;	463
+:	464
+$	465
+=	466
+==	467
+*	468
+*=	469
+%	470
+%=	471
+^	472
+^=	473
+^^	474
+^^=	475
+~	476
+~=	477
+@	478
+=>	479
+#	480

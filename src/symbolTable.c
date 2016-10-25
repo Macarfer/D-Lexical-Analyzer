@@ -199,7 +199,7 @@ void inorder(symbol *firstSymbolOfLevel){
 	if(firstSymbolOfLevel== NULL)
 		return;
 	inorder(firstSymbolOfLevel->left);
-	printf("%s\n",firstSymbolOfLevel->lexicalComponent);
+	printf("<%d> %s\n",firstSymbolOfLevel->identifier,firstSymbolOfLevel->lexicalComponent);
 	inorder(firstSymbolOfLevel->right);
 }
 
