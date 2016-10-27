@@ -1,5 +1,6 @@
 #include "inputSystem.h"
 #include "symbolTable.h"
+#include "lexical.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>

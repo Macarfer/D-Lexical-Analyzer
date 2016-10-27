@@ -1,19 +1,19 @@
 #include "lexicalAnalyzer.h"
 
 
-
 struct lexicalAnalyzer{
 	int actualLine;
 	int actualCharacter;
 	char workingCharacter;
 	char * auxiliarBuffer;
+	symbol temporalSymbol;
 
 } lexicalAnalyzer;
 
 
 //symbol * getToken();
 symbol * isNonLiteralString();
-symbol * isSeparator();
+//symbol * isSeparator();
 symbol * isSucessionOfPoints();
 symbol * isComment();
 symbol * isIntegerNumber();
@@ -30,6 +30,21 @@ void initializeLexicalAnalyzer(){
 		lexicalAnalyzer.actualCharacter=0;
 		lexicalAnalyzer.auxiliarBuffer=malloc(200);
 		inputInitialize();
+
+		/*
+		* I must initializate the symbol table with the reserved words of the language
+		* using this method I can check wether a string is a reserved word of it isn't
+		*/
+
+		FILE *lexical;
+		lexical = fopen("keyWords.h", "r");
+		char * lexeme=malloc(200);
+		for(;!feof(lexical);){
+			fscanf(lexical, "%s\n",lexeme);
+			insertOnSymbolTable(lexeme,RESERVED,0,1);
+		}
+		fclose(lexical);
+		free(lexeme);
 
 }
 
@@ -52,27 +67,69 @@ symbol * getToken(){
 			case 46: // point
 				return isSucessionOfPoints();
 			case 40: // (
-			case 41: // )
-			case 59: // ;
-			case 91: // [
-			case 93: // ]
-			case 44: // ,
-			case 123: // {
-			case 125: // }
-
 				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
-				 //printf("I've inserted: %s\n",lexicalAnalyzer.auxiliarBuffer);
-				return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=PARENTHESES_OPEN;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,PARENTHESES_OPEN,0,1);
+			case 41: // )
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=PARENTHESES_CLOSE;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,PARENTHESES_CLOSE,0,1);
+			case 59: // ;
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=SEMICOLON;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,SEMICOLON,0,1);
+			case 91: // [
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=SQUARE_BRACKET_OPEN;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,SQUARE_BRACKET_OPEN,0,1);
+			case 93: // ]
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=SQUARE_BRACKET_CLOSE;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,SQUARE_BRACKET_CLOSE,0,1);
+			case 44: // ,
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=COMMA;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,COMMA,0,1);
+			case 123: // {
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=CURLY_BRACKET_OPEN;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,CURLY_BRACKET_OPEN,0,1);
+			case 125: // }
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=CURLY_BRACKET_CLOSE;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,CURLY_BRACKET_CLOSE,0,1);
 
 			case 61: // =
 				if(getNextCharacter()==61){
 					//printf("I've inserted: ==\n");
-					return insertOnSymbolTable("==",0,0,1);
+					lexicalAnalyzer.temporalSymbol.lexeme="==";
+					lexicalAnalyzer.temporalSymbol.identifier=DOUBLE_EQUAL;
+					return &lexicalAnalyzer.temporalSymbol;
+
 				}else{
 					lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
 					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter();
-					return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
+					strcpy(lexicalAnalyzer.temporalSymbol.lexeme,lexicalAnalyzer.auxiliarBuffer);
+					lexicalAnalyzer.temporalSymbol.identifier=EQUAL;
+					return &lexicalAnalyzer.temporalSymbol;
+					//insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
 				}
 
 			case 60: // <
@@ -98,7 +155,11 @@ symbol * getToken(){
 				return isStringLiteral();
 
 			case 0:
-				return insertOnSymbolTable("$",0,0,1);
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter]=lexicalAnalyzer.workingCharacter;
+				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=DOLLAR;
+				return &lexicalAnalyzer.temporalSymbol;
 			break;
 			default:
 				return NULL;
@@ -123,11 +184,11 @@ symbol * isNonLiteralString(){
 				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter();
 				//printTable(*table);
-				// if(searchSymbol(lexicalAnalyzer.auxiliarBuffer)!=NULL){
-				// 	return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
-				// }
-				// else
-			return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,IDENTIFIER,0,1);
+				 if(searchSymbol(lexicalAnalyzer.auxiliarBuffer)!=NULL){
+				 	return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,searchSymbol(lexicalAnalyzer.auxiliarBuffer)->identifier,1);
+				 }
+				 else 
+				 	return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,IDENTIFIER,0,1);
                  //return( ( insertOnSymbolTable(table,*auxiliarBuffer,searchSymbol(*keyWords,*auxiliarBuffer)->identifier,0,1)) || (insertOnSymbolTable(table,*auxiliarBuffer,IDENTIFIER,0,1)));
 			break;
 		}
@@ -136,35 +197,6 @@ symbol * isNonLiteralString(){
 	
 
  }
-
-symbol * isSeparator(){
-		for(;;){
-		lexicalAnalyzer.workingCharacter=getNextCharacter();
-		switch(lexicalAnalyzer.workingCharacter){
-			case 65 ... 90: // [A-Z]
-			case 97 ... 122: // [a-z]
-			case 95: // _
-			case 48 ... 57: // [0-9]
-				lexicalAnalyzer.actualCharacter+=1;
-				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter]=lexicalAnalyzer.workingCharacter;
-			break;
-			case 32: // space
-			case 46: // point
-			case 10: // new line
-			case 59: // ;
-				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
-				//printf("I've inserted: %s\n",*auxiliarBuffer);
-				returnCharacter();
-				return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
-			break;
-			default:
-
-			break;
-		}
-
-	}
-	
-}
 
 symbol * isSucessionOfPoints(){
 	for(;;){
@@ -179,7 +211,18 @@ symbol * isSucessionOfPoints(){
 				if(lexicalAnalyzer.actualCharacter<3){
 				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter();
-				return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer.auxiliarBuffer;
+				switch(lexicalAnalyzer.actualCharacter){
+					case 0:
+						lexicalAnalyzer.temporalSymbol.identifier=POINT;
+						return &lexicalAnalyzer.temporalSymbol;
+					case 1:
+						lexicalAnalyzer.temporalSymbol.identifier=DOUBLE_POINT;
+						return &lexicalAnalyzer.temporalSymbol;
+					case 2:
+						lexicalAnalyzer.temporalSymbol.identifier=TRIPLE_POINT;
+						return &lexicalAnalyzer.temporalSymbol;
+				}
 				}else{
 					returnCharacter();
 					//printf("Too much points!\n");
@@ -237,11 +280,10 @@ symbol * isComment(){
 				}
 			break;
 			default:
-
-				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
-				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter();
-				return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=SLASH;
+				return &lexicalAnalyzer.temporalSymbol;
 			break;
 	}
 }
@@ -269,7 +311,10 @@ symbol * isBinaryNumber(){
 						lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
 						//printf("I've inserted: %s\n",*auxiliarBuffer);
 						returnCharacter();
-						return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,INTEGER_LITERAL,0,1);
+						lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+						lexicalAnalyzer.temporalSymbol.identifier=INTEGER_LITERAL;
+						return &lexicalAnalyzer.temporalSymbol;
+						//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,INTEGER_LITERAL,0,1);
 					break;
 				}
 
@@ -305,7 +350,10 @@ symbol * isIntegerNumber(){
 				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
 				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter();
-				return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,INTEGER_LITERAL,0,1);
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=INTEGER_LITERAL;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,INTEGER_LITERAL,0,1);
 			break;
 		}
 
@@ -343,7 +391,10 @@ symbol * isFloatNumber(){
 							lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
 							//printf("I've inserted: %s\n",*auxiliarBuffer);
 							returnCharacter();
-							return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,FLOAT_LITERAL,0,1);
+							lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+							lexicalAnalyzer.temporalSymbol.identifier=FLOAT_LITERAL;
+							return &lexicalAnalyzer.temporalSymbol;
+							//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,FLOAT_LITERAL,0,1);
 
 						}
 				}
@@ -351,7 +402,10 @@ symbol * isFloatNumber(){
 				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
 				//printf("I've inserted: %s\n",*auxiliarBuffer);
 				returnCharacter();
-				return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,FLOAT_LITERAL,0,1);
+				lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=FLOAT_LITERAL;
+				return &lexicalAnalyzer.temporalSymbol;
+				//return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,FLOAT_LITERAL,0,1);
 
 		}
 
@@ -381,15 +435,40 @@ symbol *processLessThan(){
 	for(;;){
 		lexicalAnalyzer.workingCharacter=getNextCharacter();
 		switch(lexicalAnalyzer.workingCharacter){
-			// case:
-			// break;
-			// case:
-			// break;
+			 case 61:// =
+			 	lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+				lexicalAnalyzer.temporalSymbol.identifier=LESS_THAN_EQUAL;
+				return &lexicalAnalyzer.temporalSymbol;
+			case 60:// <
+				lexicalAnalyzer.workingCharacter=getNextCharacter();
+				if(lexicalAnalyzer.workingCharacter==61){//equal
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=DOUBLE_LESS_THAN_EQUAL;
+					return &lexicalAnalyzer.temporalSymbol;
+				}else{
+					returnCharacter();
+				 	lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=DOUBLE_LESS_THAN;
+					return &lexicalAnalyzer.temporalSymbol;
+			}
+			case 62: // >
+				lexicalAnalyzer.workingCharacter=getNextCharacter();
+				if(lexicalAnalyzer.workingCharacter==61){//equal
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=LESS_THAN_MORE_THAN_EQUAL;
+					return &lexicalAnalyzer.temporalSymbol;
+				}else{
+					returnCharacter();
+				 	lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=LESS_THAN_MORE_THAN;
+					return &lexicalAnalyzer.temporalSymbol;
+			}
 			default:
 					lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
-					//printf("I've inserted: %s\n",*auxiliarBuffer);
-					//returnCharacter();
-					return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
+					returnCharacter();
+				 	lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=LESS_THAN;
+					return &lexicalAnalyzer.temporalSymbol;
 
 
 		}
@@ -401,19 +480,21 @@ symbol *processPlus(){
 		lexicalAnalyzer.workingCharacter=getNextCharacter();
 		switch(lexicalAnalyzer.workingCharacter){
 			 case 43: // +
-			 case 61: // +
-			 lexicalAnalyzer.actualCharacter+=1;
-			 lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter]=lexicalAnalyzer.workingCharacter;
-			 lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
-			//printf("I've inserted: %s\n",*auxiliarBuffer);
-			//returnCharacter();
-			return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
-			 break;
+			 		lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=DOUBLE_PLUS;
+					return &lexicalAnalyzer.temporalSymbol;
+			 case 61: // =
+			 		lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=PLUS_EQUAL;
+					return &lexicalAnalyzer.temporalSymbol;
 			default:
-					lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
-					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter();
-					return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
+					lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=DOUBLE_PLUS;
+					return &lexicalAnalyzer.temporalSymbol;
 
 
 		}
@@ -424,15 +505,17 @@ symbol *processAsterisk(){
 	for(;;){
 		lexicalAnalyzer.workingCharacter=getNextCharacter();
 		switch(lexicalAnalyzer.workingCharacter){
-			// case:
-			// break;
-			// case:
-			// break;
-			default:
+			case 61: // =
 					lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
-					//printf("I've inserted: %s\n",*auxiliarBuffer);
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=ASTERISK_EQUAL;
+					return &lexicalAnalyzer.temporalSymbol;
+			default:
 					returnCharacter();
-					return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
+					lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=ASTERISK;
+					return &lexicalAnalyzer.temporalSymbol;
 
 
 		}
@@ -444,15 +527,22 @@ symbol *processDash(){
 	for(;;){
 		lexicalAnalyzer.workingCharacter=getNextCharacter();
 		switch(lexicalAnalyzer.workingCharacter){
-			// case:
-			// break;
-			// case:
-			// break;
+			 case 61: // =
+			 		lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=HORIZONTAL_BAR_EQUAL;
+					return &lexicalAnalyzer.temporalSymbol;
+			 case 45:// -
+			 		lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=DOUBLE_HORIZONTAL_BAR;
+					return &lexicalAnalyzer.temporalSymbol;
 			default:
-					lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
-					//printf("I've inserted: %s\n",*auxiliarBuffer);
 					returnCharacter();
-					return insertOnSymbolTable(lexicalAnalyzer.auxiliarBuffer,0,0,1);
+					lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
+					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
+					lexicalAnalyzer.temporalSymbol.identifier=HORIZONTAL_BAR;
+					return &lexicalAnalyzer.temporalSymbol;
 			break;
 
 		}
