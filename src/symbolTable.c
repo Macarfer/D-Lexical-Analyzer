@@ -12,31 +12,34 @@
 #define MIN_INT -2147483648
 #define MAX_INT 2147483647
 
+/*Each node contains a symbol and a pointer to the left and right node*/
 struct tray{
 	struct symbol lexicalComponent;
 	struct tray * left;
 	struct tray * right;
 } tray;
 
-
+/*Level nodes are useful for managing different blocks of code (they are not used in this approach)*/
 struct levelNode{
 	short level;
 	struct levelNode * nextNode;
 	struct tray * firstSymbolOfLevel;
 }levelNode;
 
+/*The symbolTable itself, just contains a pointer to the first levelNode*/
 struct symbolTable{
 	struct levelNode * first;
 }symbolTable;
 
+/*Just two functions that allow more modularity for the ones that summon them*/
 symbol * insertSymbol(struct tray **,char * lexeme,int identifier,short line);
 void inorder(struct tray *firstSymbolOfLevel);
 
-
+/*Auxiliar nodes and trays for moving through the tree*/
 struct levelNode * workingNode, * auxiliarNode;
 struct tray * workingTray, * auxiliarTray;
 
-
+/*if the working node isn't initializated this function initializates it*/
 void  initializeSymbolTable(){
 	if(workingNode==NULL)
 		workingNode= malloc(sizeof(levelNode));
@@ -54,56 +57,33 @@ symbol * insertOnSymbolTable(char * lexeme, int identifier, short line, short le
 		symbolTable.first->level = 1;
 		symbolTable.first->nextNode = NULL;
 		symbolTable.first->firstSymbolOfLevel=NULL;
-		//table->first->firstSymbolOfLevel=(tray *)malloc(sizeof(tray));
 		return insertSymbol(&(symbolTable.first->firstSymbolOfLevel),lexeme, identifier ,line);
-		//printf("First tray of level directon out: %p\n",table->first->firstSymbolOfLevel);
-
+	}
 	/*
 	*
 	*	If the table isn't empty we must check the
 	* 	linked list of table nodes
 	*/
-	}
 
 	workingNode = symbolTable.first;
-//	printf("Auxiliar node: %p\n",workingNode);
-//	printf("Table first: %p\n",table->first);
 	while(workingNode!=NULL){
-//		printf("Axuiliar node level: %d\n",workingNode->level);
-// 		// printf("Compared node level: %d\n",level);
-// 		/*
-// 		*	If the node we are loking for already exist, we must insert a new
-// 		* 	tray in the already existing level node
-// 		*/
+		/*If the level of the symbol matches the level we're working with then we insert it*/
 		if(workingNode->level==level){
-		//	printf("I'm gonna insert an item\n");
-
-			//&workingNode=(*workingNode)->nextNode;
-			//workingNode=workingNode->nextNode;
 			return insertSymbol(&workingNode->firstSymbolOfLevel,lexeme, identifier ,line);
-// 		/*
-// 		*	If the node doesn't exist, we must create a new one
-// 		*	this new node is linked from the last created one
-// 		*/
 		}
-
- 			//printf("Close...\n");
 			workingNode=workingNode->nextNode;
 	}
-// 	// printf("I've inserted shit: %s\n",workingNode->firstSymbolOfLevel->lexicalComponent);
-// 	//return table;
 	return NULL;
  }
 
-
+/*Search if a symbol is in the tree and, if it is, it is returned*/
 symbol * searchSymbol(char * lexeme){
 	int index=1;
 	auxiliarNode=symbolTable.first;
-	do{
+	for(;auxiliarNode->nextNode!=NULL;){
 		index=1;
 		auxiliarTray=auxiliarNode->firstSymbolOfLevel;
 		for(;index>0;){
-			//printf("auxiliar: %s\n",auxiliarTray->lexicalComponent);
 			switch(strcmp(auxiliarTray->lexicalComponent.lexeme,lexeme)){
 				case MIN_INT ... -1:
 					if(auxiliarTray->right!=NULL){
@@ -120,7 +100,6 @@ symbol * searchSymbol(char * lexeme){
 					}
 				break;
 				default:
-					//printf("Found %s!\n",auxiliarTray->lexicalComponent);
 					return &auxiliarTray->lexicalComponent;
 			}
 		}
@@ -128,35 +107,39 @@ symbol * searchSymbol(char * lexeme){
 			return NULL;
 		else
 			auxiliarNode=auxiliarNode->nextNode;
-	}while(auxiliarNode->nextNode!=NULL);
+	}
 	return NULL;
 }
 
+/*Given a level, inserts a symbol on the right level*/
 symbol * insertSymbol(struct tray ** firstSymbolOfLevel,char * lexeme,int identifier,short line){
+	/*If the first symbol doesn't exist, then we create it*/
 	if(*firstSymbolOfLevel==NULL){
-		//printf("Entered!\n");
+		/*The tray is allocated*/
 		*firstSymbolOfLevel= malloc(sizeof(tray));
-		//(*firstSymbolOfLevel)->lexicalComponent = malloc(sizeof(symbol));
+		/*We initializate the symbol itself, and we assign the right values to it's fields*/
 		(*firstSymbolOfLevel)->lexicalComponent.lexeme = malloc(strlen(lexeme));
 		strcpy((*firstSymbolOfLevel)->lexicalComponent.lexeme,lexeme);
 		(*firstSymbolOfLevel)->lexicalComponent.line = line;
+		(*firstSymbolOfLevel)->lexicalComponent.identifier=identifier;
 		(*firstSymbolOfLevel)->left = NULL;
 		(*firstSymbolOfLevel)->right = NULL;
-		(*firstSymbolOfLevel)->lexicalComponent.identifier=identifier;
-	//	 printf("First tray of level directon: %p\n",*firstSymbolOfLevel);
-	// 	// printf("Good job first attemp!\n");
+
+		/*A pointer to the created symbol is returned*/
 		return &(*firstSymbolOfLevel)->lexicalComponent;
 	}
+	/*If the first symbol already exists*/
 	else{
 		workingTray=*firstSymbolOfLevel;
-		 // printf("working tray: %p\n",workingTray);
-		 // printf("First tray: %p\n",firstSymbolOfLevel);
-	//	do{
+		/*We go over the tree searching for a place to store the new symbol*/
 		for(;;){
+			/*The element we compare to choose a direction is the lexeme of the symbol*/
 			switch(strcmp(workingTray->lexicalComponent.lexeme,lexeme)){
+				/*If the value is smaller,then we go left*/
 				case MIN_INT ... -1:
+				/*If the tray is empty, then we store the symbol there*/
 				if(workingTray->right==NULL){
-				//printf("I'm gonna go right\n");
+				/*The tray is allocated*/
 					workingTray->right=malloc(sizeof(tray));
 					workingTray->right->lexicalComponent.line = line;
 					workingTray->right->lexicalComponent.lexeme = malloc(strlen(lexeme));
@@ -164,14 +147,19 @@ symbol * insertSymbol(struct tray ** firstSymbolOfLevel,char * lexeme,int identi
 					workingTray->right->lexicalComponent.identifier=identifier;
 					workingTray->right->left=NULL;
 					workingTray->right->right=NULL;
-				//printf("I've inserted %s right to %s\n",workingTray->right->lexicalComponent.lexeme,workingTray->lexicalComponent.lexeme);
+					/*The inserted symbol is returned*/
 					return &workingTray->right->lexicalComponent;
-				}else{
+				}
+				/*If the tray isn't empty then we continue going over the tree*/
+				else{
 					workingTray=workingTray->right;
 				}
 				break;
+				/*If the value is higher then we go right*/
 				case 1 ... MAX_INT :
+				/*If the tray is empty, then we store the symbol there*/
 				if(workingTray->left==NULL){
+					/*The tray is allocated*/
 					workingTray->left=malloc(sizeof(tray));
 					workingTray->left->lexicalComponent.line = line;
 					workingTray->left->lexicalComponent.lexeme = malloc(strlen(lexeme));
@@ -179,19 +167,19 @@ symbol * insertSymbol(struct tray ** firstSymbolOfLevel,char * lexeme,int identi
 					workingTray->left->lexicalComponent.identifier=identifier;
 					workingTray->left->left=NULL;
 					workingTray->left->right=NULL;
-					//printf("I've inserted %s left to %s\n",workingTray->left->lexicalComponent.lexeme,workingTray->lexicalComponent.lexeme);
+					/*The inserted symbol is returned*/
 					return &workingTray->left->lexicalComponent;
-					}else{
+					}
+					/*If the tray isn't empty then we continue going over the tree*/	
+					else{
 						workingTray=workingTray->left;
 				}
 				break;
+				/*If it is the same value, then we've found the element*/
 				default:
-					//printf("Same ->lexicalComponent beach!\n");
-					//printf("I've inserted: %s\n",workingTray->lexicalComponent.lexeme);
 					return &workingTray->lexicalComponent;
 			}
 		}
-		//}while(workingTray->right==NULL && workingTray->left==NULL);
 
 	}
 }

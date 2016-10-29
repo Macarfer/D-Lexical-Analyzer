@@ -1,20 +1,15 @@
 #include "inputSystem.h"
 #include "symbolTable.h"
 #include "lexical.h"
+#include "errorManager.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 
-#define PATH_TO_FILE "../regression.d"
+#define MAX_WORD_SIZE 200
+#define KEY_WORDS_FILE "keyWords.h"
 
-#define   IDENTIFIER 300
-#define   STRING_LITERAL 301
-#define   CHARACTER_LITERAL 302
-#define   INTEGER_LITERAL 303
-#define   FLOAT_LITERAL 304
-//#define   RESERVED 305
-
-void initializeLexicalAnalyzer();
+void initializeLexicalAnalyzer(char const *);
 symbol * getToken();

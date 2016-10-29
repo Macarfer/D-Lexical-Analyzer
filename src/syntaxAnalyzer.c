@@ -1,20 +1,34 @@
-#include "lexicalAnalyzer.h"
 #include <stdio.h>
+#include "inputSystem.h"
+#include "lexicalAnalyzer.h"
 #include <stdlib.h>
+#include <string.h>
+#include "lexical.h"
+
+/*This is the main program of the Lexical Analyzer
+basically it initializates all the components of 
+the analyzer*/
 
 int main(int argc, char const *argv[])
 {
-	lexicalAnalyzer * lexical=NULL;
-	symbol * tmp;
-	initializeLexicalAnalyzer(&lexical);
-	//tmp=getToken(&lexical);
-	do{
-    tmp=getToken(&lexical);
-	printf("<%d> %s\n",tmp->identifier,tmp->lexicalComponent);
+	symbol * tmp=NULL;
+	if(argc > 1)
+		initializeLexicalAnalyzer(argv[1]);
+	else
+	initializeLexicalAnalyzer("../regression.d");
+	
+	printf("\n\nIdentifier\t\tLexeme\n\n");
+	tmp=getToken();
+	while(tmp->identifier!=DOLLAR){
+	printf("<%d>\t\t\t%s\n",tmp->identifier,tmp->lexeme);
+	tmp=getToken();
+	//printSymbolTable();
+	}
 
-	}while(tmp->identifier!=0);
-	printf("Taboa de simbolos: \n");
-	printTable(lexical->sTable);
+	printf("\n********************************************************************\n 			Symbol Table\n********************************************************************\n");
+	printSymbolTable();
+
+	finalizeInputSystem();
 	/* code */
 	return 0;
 }
