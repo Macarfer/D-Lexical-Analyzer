@@ -7,7 +7,7 @@
 #include "errorManager.h"
 
 /*Sets the block size of the fileSystem*/
-#define N 4096
+#define N 4
 
 /*Initializes all necessary structures for reading from the file*/
 void inputInitialize(char const *);

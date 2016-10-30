@@ -70,8 +70,16 @@ char getNextCharacter(){
 }
 /*Allows the lexicalAnalyzer to return a character to the input system*/
 void returnCharacter(){
-	/*The position of the front pointer is moved one step backwards*/
-	inputSystem.frontPointer=(inputSystem.frontPointer-1);
+		/*If the actual character is the begining of the first buffer, it's previous
+		place is the last one of the second buffer*/ 
+		if(&*(inputSystem.frontPointer)==&inputSystem.doubleBuffer[0]){
+			inputSystem.frontPointer=(inputSystem.doubleBuffer+2*N);
+
+		}else{
+			/*The position of the front pointer is moved one step backwards*/
+			inputSystem.frontPointer=(inputSystem.frontPointer-1);
+		}
+
 }
 /*Finalizes all structures used on this program and frees memory and structures*/
 short finalizeInputSystem(){

@@ -34,6 +34,7 @@ struct symbolTable{
 /*Just two functions that allow more modularity for the ones that summon them*/
 symbol * insertSymbol(struct tray **,char * lexeme,int identifier,short line);
 void inorder(struct tray *firstSymbolOfLevel);
+void finalize(struct tray *firstSymbolOfLevel);
 
 /*Auxiliar nodes and trays for moving through the tree*/
 struct levelNode * workingNode, * auxiliarNode;
@@ -211,3 +212,22 @@ void inorder(struct tray *firstSymbolOfLevel){
 	inorder(firstSymbolOfLevel->right);
  }
 
+/*This function iterates over the level nodes for freeing the tree*/
+void finalizeSymbolTable(){
+	workingNode = symbolTable.first;
+	while(workingNode!=NULL){
+		/*For each working node we print the tree in it in alphabetical order*/
+		finalize(workingNode->firstSymbolOfLevel);
+		free(workingNode->firstSymbolOfLevel);
+		workingNode=workingNode->nextNode;
+	}
+}
+
+/*This iteration goes left,right, node is a postorder approach for deleting the tree*/
+void finalize(struct tray *firstSymbolOfLevel){
+	if(firstSymbolOfLevel== NULL)
+		return;
+	finalize(firstSymbolOfLevel->left);
+	finalize(firstSymbolOfLevel->right);
+	free(firstSymbolOfLevel->lexicalComponent.lexeme);
+ }

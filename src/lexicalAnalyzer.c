@@ -24,11 +24,10 @@ symbol * processAsterisk();
 symbol * processPlus();
 
 /*Starts the inital variables for allowing the use of the lexical analyzer*/
-void initializeLexicalAnalyzer(char const * path_to_file){
+void initializeLexicalAnalyzer(){
 	lexicalAnalyzer.actualLine=1;
 	lexicalAnalyzer.actualCharacter=0;
 	lexicalAnalyzer.auxiliarBuffer=malloc(MAX_WORD_SIZE);
-	inputInitialize(path_to_file);
 
 		/*
 		* I must initializate the symbol table with the reserved words of the language
@@ -521,21 +520,25 @@ symbol * isFloatNumber(){
 
 	}
 
-/*This function processes all the */
+/*This function processes all the strings begining with the < character*/
 	symbol *processLessThan(){
 		for(;;){
 			lexicalAnalyzer.workingCharacter=getNextCharacter();
 			switch(lexicalAnalyzer.workingCharacter){
+				/*If the next character is = then we have a valid string*/
 			 case 61:// =
 			 lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
 			 lexicalAnalyzer.temporalSymbol.identifier=LESS_THAN_EQUAL;
 			 return &lexicalAnalyzer.temporalSymbol;
 			case 60:// <
+			/*If the next character is < then we've got two options*/
 			lexicalAnalyzer.workingCharacter=getNextCharacter();
+				/*If we have an equal, then we've got the symbol <<=*/
 				if(lexicalAnalyzer.workingCharacter==61){//equal
 					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
 					lexicalAnalyzer.temporalSymbol.identifier=DOUBLE_LESS_THAN_EQUAL;
 					return &lexicalAnalyzer.temporalSymbol;
+					/*If not, we just have the lexeme << and we must return the actual character*/
 				}else{
 					returnCharacter();
 					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
@@ -543,17 +546,21 @@ symbol * isFloatNumber(){
 					return &lexicalAnalyzer.temporalSymbol;
 				}
 			case 62: // >
+			/*Same as before, if we have > then, we have two options*/
 			lexicalAnalyzer.workingCharacter=getNextCharacter();
+			/*An equal and we have the lexeme <>= */
 				if(lexicalAnalyzer.workingCharacter==61){//equal
 					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
 					lexicalAnalyzer.temporalSymbol.identifier=LESS_THAN_MORE_THAN_EQUAL;
 					return &lexicalAnalyzer.temporalSymbol;
+					/*Or something else and we have just the lexeme <>*/
 				}else{
 					returnCharacter();
 					lexicalAnalyzer.temporalSymbol.lexeme=lexicalAnalyzer .auxiliarBuffer;
 					lexicalAnalyzer.temporalSymbol.identifier=LESS_THAN_MORE_THAN;
 					return &lexicalAnalyzer.temporalSymbol;
 				}
+				/*If we don't have any of the characters shown before, then the lexeme we're searching for is just < and we have to return the actual character*/
 				default:
 				lexicalAnalyzer.auxiliarBuffer[lexicalAnalyzer.actualCharacter+1]='\0';
 				returnCharacter();
@@ -566,7 +573,9 @@ symbol * isFloatNumber(){
 		}
 
 	}
-
+	/*Processes lexemes begining with + character.
+	It compares the next character with allowed values and returns them. If the character adquired is none
+	of the valid ones it is returned and the symbol + is returned*/
 	symbol *processPlus(){
 		lexicalAnalyzer.workingCharacter=getNextCharacter();
 		switch(lexicalAnalyzer.workingCharacter){
@@ -591,7 +600,9 @@ symbol * isFloatNumber(){
 			}
 
 		}
-
+/*Processes lexemes begining with * character.
+	It compares the next character with allowed values and returns them. If the character adquired is none
+	of the valid ones it is returned and the symbol * is returned*/
 		symbol *processAsterisk(){
 			for(;;){
 				lexicalAnalyzer.workingCharacter=getNextCharacter();
@@ -613,7 +624,9 @@ symbol * isFloatNumber(){
 	}
 	
 }
-
+	/*Processes lexemes begining with - character.
+	It compares the next character with allowed values and returns them. If the character adquired is none
+	of the valid ones it is returned and the symbol - is returned*/
 symbol *processDash(){
 	for(;;){
 		lexicalAnalyzer.workingCharacter=getNextCharacter();
@@ -640,3 +653,8 @@ symbol *processDash(){
 		}
 
 	}
+
+/*Frees the allocated space for the lexical analyzer components*/
+void finalizeLexicalAnalyzer(){
+	free(lexicalAnalyzer.auxiliarBuffer);
+}

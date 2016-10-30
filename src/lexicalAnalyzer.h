@@ -11,5 +11,11 @@
 #define MAX_WORD_SIZE 200
 #define KEY_WORDS_FILE "keyWords.h"
 
-void initializeLexicalAnalyzer(char const *);
+/*Initializates the lexical analyzer so it can be used*/
+void initializeLexicalAnalyzer();
+
+/*Returns a symbol that contains a lexeme, and the line where it was in the code*/
 symbol * getToken();
+
+/*Frees memory and resources */
+void finalizeLexicalAnalyzer();
