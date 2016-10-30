@@ -80,25 +80,32 @@ symbol * insertOnSymbolTable(char * lexeme, int identifier, short line, short le
 symbol * searchSymbol(char * lexeme){
 	int index=1;
 	auxiliarNode=symbolTable.first;
+	/*Starting on the initial node, we go over the tree*/
 	for(;auxiliarNode->nextNode!=NULL;){
 		index=1;
 		auxiliarTray=auxiliarNode->firstSymbolOfLevel;
 		for(;index>0;){
+			/*We compare the lexeme we're searching for with the one present in the actual node*/
 			switch(strcmp(auxiliarTray->lexicalComponent.lexeme,lexeme)){
+				/*If the lexeme is smaller than the actual, when if it has been inserted it has been on the left*/
 				case MIN_INT ... -1:
 					if(auxiliarTray->right!=NULL){
+					/*If the symbol has a left symbol then we repeat the proccess with it if not, the symbol is not in the table*/
 						auxiliarTray=auxiliarTray->right;
 					}else{
 						index=0;
 					}
 				break;
+				/*If the lexeme is bigger than the actual, when if it has been inserted it has been on the right*/
 				case 1 ... MAX_INT :
+					/*If the symbol has a right symbol then we repeat the proccess with it if not, the symbol is not in the table*/
 					if(auxiliarTray->left!=NULL){
 						auxiliarTray=auxiliarTray->left;
 					}else{
 						index=0;
 					}
 				break;
+				/*If the lexemes are equal then we've found the lexeme we were looking for and we return it*/
 				default:
 					return &auxiliarTray->lexicalComponent;
 			}
@@ -184,21 +191,23 @@ symbol * insertSymbol(struct tray ** firstSymbolOfLevel,char * lexeme,int identi
 	}
 }
 
+/*This function iterates over the level nodes for printing the tree*/
 void printSymbolTable(){
 	workingNode = symbolTable.first;
 	while(workingNode!=NULL){
+		/*For each working node we print the tree in it in alphabetical order*/
 		inorder(workingNode->firstSymbolOfLevel);
 		workingNode=workingNode->nextNode;
 	}
 
 }
 
+/*Just an inorder approach for printing the nodes of the tree*/
 void inorder(struct tray *firstSymbolOfLevel){
-
 	if(firstSymbolOfLevel== NULL)
 		return;
 	inorder(firstSymbolOfLevel->left);
-	printf("<%d> %s\n",firstSymbolOfLevel->lexicalComponent.identifier,firstSymbolOfLevel->lexicalComponent.lexeme);
+	printf("<%d>\t%s\n",firstSymbolOfLevel->lexicalComponent.identifier,firstSymbolOfLevel->lexicalComponent.lexeme);
 	inorder(firstSymbolOfLevel->right);
  }
 
