@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "inputSystem.h"
 #include "lexicalAnalyzer.h"
 #include <stdlib.h>
 #include <string.h>
@@ -14,15 +13,14 @@ int main(int argc, char const *argv[])
 {
 	symbol * tmp=NULL;
 
-	/*If an argument isn't used the default route is*/
-	if(argc > 1)
-		inputInitialize(argv[1]);
-	else
-		inputInitialize(PATH_TO_FILE);
-
 	/*Initialization of all components*/
 	initializeSymbolTable();
-	initializeLexicalAnalyzer();
+	/*If an argument isn't used the default route is*/
+	if(argc > 1)
+		initializeLexicalAnalyzer(argv[1]);
+	else
+		initializeLexicalAnalyzer(PATH_TO_FILE);
+
 	tmp=getToken();
 
 
@@ -39,7 +37,6 @@ int main(int argc, char const *argv[])
 	printSymbolTable();
 
 	/*All components are finalized*/
-	finalizeInputSystem();
 	finalizeSymbolTable();
 	finalizeLexicalAnalyzer();
 	return 0;
